@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Color Perception",
+        "description": "Test your color perception ability.",
+        "url": "/tests/color-perception-test",
+        "icon":"FaPalette",
+        "thumb":"/tools/ColorPerceptionTest.webp"
+    },
+    {
+        "name": "Shades of Gray",
+        "description": "Test your ability to distinguish subtle differences in gray shades",
+        "url": "/tests/gray-shades-test",
+        "icon":"FaAdjust",
+        "thumb":"/tools/ShadesofGrayTest.webp"
+    },
+    // {
+    //     "name": "51 Shades of Gray",
+    //     "description": "Test your ability to distinguish subtle differences in gray shades",
+    //     "url": "/tests/51-gray-shades-test",
+    //     "icon":"FaAdjust",
+    //     "thumb":"/tools/51ShadesofGrayTest.webp"
+    // },
+    {
+        "name": "Color Blindness",
+        "description": "Test your color vision with this Ishihara-style test",
+        "url": "/tests/color-blindness-test",
+        "icon":"FaTrafficLight",
+        "thumb":"/tools/ColorBlindnessTest.webp"
+    }
+]

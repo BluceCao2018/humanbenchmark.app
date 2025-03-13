@@ -1,0 +1,9 @@
+[
+    {
+        "name": "Face Recognition Test",
+        "description": "Test your face recognition ability.",
+        "url": "/tests/face-recognition-test",
+        "icon":"FaFaceSmile",
+        "thumb":"/tools/FaceRecognitionTest.webp"
+    }
+]
