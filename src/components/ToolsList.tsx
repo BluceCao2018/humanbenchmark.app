@@ -246,52 +246,52 @@ export const AllToolsList = ({ tools, locale }: { tools: toolProps[], locale: st
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {tools.map((resource: toolProps, index) => (
         <Card key={index} className='overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group'>
-          {/* 图片容器 */}
-          <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-blue-100 to-blue-50">
-            {resource.thumb ? (
-              <Image
-                src={resource.thumb}
-                alt={resource.name}
-                quality={10}  // 设置合适的质量
-                loading="lazy"
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center">
-                {React.createElement(iconMap[resource.icon] || FaLink, { 
-                  size: 80, 
-                  className: "text-blue-600/50 transition-colors duration-300 group-hover:text-blue-500" 
-                })}
-              </div>
-            )}
-          </div>
+          <a 
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            {/* 图片容器 */}
+            <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-blue-100 to-blue-50">
+              {resource.thumb ? (
+                <Image
+                  src={resource.thumb}
+                  alt={resource.name}
+                  quality={10}
+                  loading="lazy"
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {React.createElement(iconMap[resource.icon] || FaLink, { 
+                    size: 80, 
+                    className: "text-blue-600/50 transition-colors duration-300 group-hover:text-blue-500" 
+                  })}
+                </div>
+              )}
+            </div>
 
-          {/* 内容区域 */}
-          <CardHeader className="bg-white">
-            <a 
-              href={resource.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors"
-            >
+            {/* 内容区域 */}
+            <CardHeader className="bg-white">
               <CardTitle className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors">
                 {resource.name}
               </CardTitle>
-            </a>
-            <CardDescription className="mt-2 text-sm text-gray-600 line-clamp-2">
-              {resource.description}
-            </CardDescription>
-            {resource.tags && (
-              <div className="flex flex-wrap gap-2 mt-3">
-                {resource.tags.slice(0, 3).map((tag, i) => (
-                  <Badge key={i} variant="secondary" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </CardHeader>
+              <CardDescription className="mt-2 text-sm text-gray-600 line-clamp-2">
+                {resource.description}
+              </CardDescription>
+              {resource.tags && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {resource.tags.slice(0, 3).map((tag, i) => (
+                    <Badge key={i} variant="secondary" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </CardHeader>
+          </a>
         </Card>
       ))}
     </div>
