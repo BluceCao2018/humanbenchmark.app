@@ -22,30 +22,22 @@
     "description": "Measure your ability with brain games and cognitive tests on Human Benchmark"
   },
   "category": {
-    "meta_title": "Category｜All the Test tools you want are on ",
-    "meta_description": "You can look for the Test tools you need according to categories",
+    "meta_title": "Category｜All the Human Benchmark Test tools",
+    "meta_description": "You can look for the Human Benchmark Test tools you need according to categories",
     "homeBtn": "Home",
     "categoryBtn": "Category",
-    "h1": "Test Tools Category",
-    "h2": "Find Every Test Tools You Need Here",
-    "h2description": "All Test tools are sorted alphabetically"
+    "h1": "Human Benchmark Test Tools Category",
+    "h2": "Find Every Human Benchmark Test Tools You Need Here",
+    "h2description": "All The Human Benchmark Test tools are sorted alphabetically"
   },
   "article": {
-    "meta_title": "Article｜All the AI tools you want are on ",
+    "meta_title": "Article｜Human Benchmark Test",
     "meta_description": "By reading these articles on AI Kratom, you can quickly acquire knowledge about AI tools and at the same time, it will help you choose the appropriate AI tools.",
     "h1": "Articles",
-    "h2": "Read More Articles About AI Tools And Choose The Appropriate AI Tools For You",
+    "h2": "Read More Articles About Human Benchmark Test",
     "homeBtn": "Home",
     "articleBtn": "Article",
     "backToArticles": "Back to articles"
-  },
-  "changelog": {
-    "meta_title": "Changelog",
-    "meta_description": "Stay up to date with the latest updates in DevToolset.net",
-    "h1": "Changelog",
-    "h2": "Stay up to date with the latest updates in DevToolset.net",
-    "homeBtn": "Home",
-    "changelogBtn": "Changelog"
   },
   "tools": {
     "meta_description": "Find Every Essential Developer Tools You Need For Your Development Journey",

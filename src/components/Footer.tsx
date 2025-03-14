@@ -14,7 +14,11 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
           <div className='flex flex-col justify-center items-center lg:items-start lg:justify-start'>
             <h3 className="text-sm font-bold tracking-normal">
-              <Link href="/" className="flex items-center space-x-2">
+              <Link 
+                href="/" 
+                className="flex items-center space-x-2"
+                title="Return to Human Benchmark homepage"
+              >
                 <Image
                   src={IconImage}
                   className="block opacity-80"
@@ -40,12 +44,20 @@ export function Footer() {
             <h3 className="text-sm font-semibold  tracking-wider uppercase">{t('quickLinks')}</h3>
             <ul className="mt-4 space-y-4">
               <li>
-                <Link href="/" className="text-base ">
+                <Link 
+                  href="/" 
+                  className="text-base"
+                  title="Go to homepage"
+                >
                   {t('home')}
                 </Link>
               </li>
               <li>
-                <Link href="/category" className="text-base">
+                <Link 
+                  href="/category" 
+                  className="text-base"
+                  title="Browse all test categories"
+                >
                   {t('category')}
                 </Link>
               </li>
@@ -64,7 +76,7 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold tracking-wider uppercase">{t('legal')}</h3>
             <ul className="mt-4 space-y-4">
-            {/* <li>
+            <li>
                 <Link href="/article/privacy-policy" className="text-base">
                   {t('privacy')}
                 </Link>
@@ -73,14 +85,27 @@ export function Footer() {
                 <Link href="/article/terms-of-service" className="text-base">
                   {t('termsOfService')}
                 </Link>
-              </li> */}
+              </li>
             </ul>
           </div>
           <div>
             <h3 className="text-sm font-semibold tracking-wider uppercase">{t('connect')}</h3>
             <ul className="mt-4 space-y-4">
+            <li>
+                <Link 
+                  href="/article/about"
+                  className="text-base"
+                  title="about Human Benchmark"
+                >
+                  About Us
+                </Link>
+              </li>
               <li>
-                <Link href={"mailto:blucecao2024@gmail.com"} className="text-base">
+                <Link 
+                  href={"mailto:blucecao2024@gmail.com"} 
+                  className="text-base"
+                  title="Contact support via email"
+                >
                   {t('support')}
                 </Link>
               </li>

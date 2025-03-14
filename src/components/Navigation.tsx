@@ -100,7 +100,11 @@ export const Navigation = ({ categories }: navigationProp ) => {
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex gap-6 md:gap-10">
-          <Link href="/" className="flex items-center space-x-2">
+          <Link 
+            href="/" 
+            className="flex items-center space-x-2"
+            title="Return to Human Benchmark homepage"
+          >
             <Image
               src={IconImage}
               className="block"
@@ -114,14 +118,24 @@ export const Navigation = ({ categories }: navigationProp ) => {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <Link href="/" legacyBehavior passHref>
+                  <Link 
+                    href="/" 
+                    legacyBehavior 
+                    passHref
+                    title="Go to homepage"
+                  >
                     <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'font-medium', '/' === pathname && "font-extrabold")}>
                       {t('homeBtn')}
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
                 {/* <NavigationMenuItem>
-                  <NavigationMenuTrigger className={cn('font-medium', '/category' === pathname && "font-extrabold")}>{t('categoryBtn')}</NavigationMenuTrigger>
+                  <NavigationMenuTrigger 
+                    className={cn('font-medium', '/category' === pathname && "font-extrabold")}
+                    title="Browse test categories"
+                  >
+                    {t('categoryBtn')}
+                  </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-3 lg:w-[600px] ">
                       {categories.map((category) => (
@@ -130,6 +144,7 @@ export const Navigation = ({ categories }: navigationProp ) => {
                           title={category.name}
                           href={`/category/${category.link}`}
                           className='capitalize'
+                          title={`Take ${category.name} test`}
                         >
                           {category.description}
                         </ListItem>
@@ -138,6 +153,7 @@ export const Navigation = ({ categories }: navigationProp ) => {
                         title={t('moreCategoryBtn')}
                         href={'/category'}
                         className='capitalize border border-muted  bg-gradient-to-b  from-muted/50 to-muted/20'
+                        title="View all test categories"
                       >
                         {t('moreCategoryDescription')}
                       </ListItem>
@@ -189,7 +205,7 @@ export const Navigation = ({ categories }: navigationProp ) => {
           </Link>*/}
           <div className="flex items-center gap-1">
             {/* <ThemeModeButton /> */}
-            <LocaleButton />
+            <LocaleButton/>
             {/* <LoginButton /> */}
           </div>
           {/*<Link
@@ -211,6 +227,7 @@ export const Navigation = ({ categories }: navigationProp ) => {
                   size="icon"
                   variant="outline"
                   aria-label="Menu"
+                  title="Open navigation menu"
                 >
                   <MenuIcon className="size-4" />
                 </Button>
@@ -225,6 +242,7 @@ export const Navigation = ({ categories }: navigationProp ) => {
                         "block px-3 py-2 text-lg",
                         isMenuItemActive(menuItem.href) ? "font-bold" : "",
                       )}
+                      title={`Go to ${menuItem.label.toLowerCase()}`}
                     >
                       {menuItem.label}
                     </Link>

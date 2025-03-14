@@ -4,7 +4,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const sitemapRoutes: MetadataRoute.Sitemap = [
     {
       url: '', // home
-      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
     },
@@ -16,7 +15,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     //   },
     {
       url: 'category', // category
-      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,
     },

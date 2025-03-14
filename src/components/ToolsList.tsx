@@ -90,29 +90,57 @@ const ToolsList = ({ category, locale, showMoreLink = true }: toolsListProps) =>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {/* @ts-ignore */}
         {srcList.slice(0,8).map((resource: toolProps, index) => (
-          <Card key={index} className='max-w-sm overflow-hidden shadow-md transform transition-transform duration-300 hover:scale-105 transition-colors duration-300 group'>
-            
-            <CardHeader>
-              <a 
-                href={`${resource.url}`} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="transition-colors inline-flex flex-col items-center"
-              >
-                <div className='p-2 rounded-md mb-1'>
-                  {React.createElement(iconMap[resource.icon] || FaLink, { size: 60, className: "text-blue-600 transition-colors duration-300 group-hover:text-yellow-500" })}
+          <Card key={index} className='overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group'>
+          <a 
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+            title={`Visit ${resource.name} - ${resource.description}`}
+          >
+            {/* 图片容器 */}
+            <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-blue-100 to-blue-50">
+              {resource.thumb ? (
+                <Image
+                  src={resource.thumb}
+                  alt={`${resource.name} thumbnail`}
+                  title={`${resource.name} - ${resource.description}`}
+                  quality={10}
+                  loading="lazy"
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {React.createElement(iconMap[resource.icon] || FaLink, { 
+                    size: 80, 
+                    className: "text-blue-600/50 transition-colors duration-300 group-hover:text-blue-500",
+                    title: `${resource.name} - ${resource.description}`
+                  })}
                 </div>
-                <CardTitle className='capitalize tracking-tighter'>{resource.name}</CardTitle>
-                {/* <ExternalLink size={16} className='ml-1' /> */}
-              </a>
-              <CardDescription className='flex flex-col justify-center text-center items-center text-gray-700 dark:text-gray-400 text-lg '>
-                {/* <div className='flex flex-col h-[60px] line-clamp-3 mt-1 tracking-tight text-start text-gray-800 dark:text-white text-lg items-center'> */}
-                  {resource.description}
-                {/* </div> */}
-                    
+              )}
+            </div>
+
+            {/* 内容区域 */}
+            <CardHeader className="bg-white">
+              <CardTitle className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+                {resource.name}
+              </CardTitle>
+              <CardDescription className="mt-2 text-sm text-gray-600 line-clamp-2">
+                {resource.description}
               </CardDescription>
+              {resource.tags && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {resource.tags.slice(0, 3).map((tag, i) => (
+                    <Badge key={i} variant="secondary" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </CardHeader>
-          </Card>
+          </a>
+        </Card>
         ))}
       </div>
     </section>
@@ -127,36 +155,57 @@ const ToolsPage = ({ category, locale }: { category: categoryProps, locale: stri
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {/* @ts-ignore */}
         {srcList.slice(0,8).map((resource: toolProps, index) => (
-          <Card key={index} className='max-w-sm overflow-hidden shadow-md transform transition-transform duration-300 hover:scale-105 transition-colors duration-300 group'>
-            
-            <CardHeader>
-              <a 
-                href={`${resource.url}`} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="transition-colors inline-flex flex-col items-center"
-              >
-                <div className='p-2 rounded-md mb-1'>
-                  {React.createElement(iconMap[resource.icon] || FaLink, { size: 60, className: "text-blue-600 transition-colors duration-300 group-hover:text-yellow-500" })}
+          <Card key={index} className='overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group'>
+          <a 
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+            title={`Visit ${resource.name} - ${resource.description}`}
+          >
+            {/* 图片容器 */}
+            <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-blue-100 to-blue-50">
+              {resource.thumb ? (
+                <Image
+                  src={resource.thumb}
+                  alt={`${resource.name} thumbnail`}
+                  title={`${resource.name} - ${resource.description}`}
+                  quality={10}
+                  loading="lazy"
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {React.createElement(iconMap[resource.icon] || FaLink, { 
+                    size: 80, 
+                    className: "text-blue-600/50 transition-colors duration-300 group-hover:text-blue-500",
+                    title: `${resource.name} - ${resource.description}`
+                  })}
                 </div>
-                <CardTitle className='capitalize tracking-tighter'>{resource.name}</CardTitle>
-                {/* <ExternalLink size={16} className='ml-1' /> */}
-              </a>
-              <CardDescription className='flex flex-col justify-between '>
-                <div className='h-[60px] line-clamp-3 mt-1 tracking-tight text-start'>
-                  {resource.description}
-                </div>
-                { resource.tags ? 
-                  <div className='mt-3'>
-                    {resource.tags.slice(0,3).map((tag, i) => (
-                      <Badge key={i} variant="secondary" className='text-xs pb-1 mr-1 mt-2 tracking-tighter'>{tag}</Badge>
-                    ))}
-                  </div> :
-                 null
-                }     
+              )}
+            </div>
+
+            {/* 内容区域 */}
+            <CardHeader className="bg-white">
+              <CardTitle className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+                {resource.name}
+              </CardTitle>
+              <CardDescription className="mt-2 text-sm text-gray-600 line-clamp-2">
+                {resource.description}
               </CardDescription>
+              {resource.tags && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {resource.tags.slice(0, 3).map((tag, i) => (
+                    <Badge key={i} variant="secondary" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </CardHeader>
-          </Card>
+          </a>
+        </Card>
         ))}
       </div>
     </section>
