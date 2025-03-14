@@ -2,13 +2,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { FaVolumeUp, FaHourglassStart, FaExclamationTriangle, FaPlay, FaCheck } from 'react-icons/fa'
+import { FaVolumeUp, FaHourglassStart, FaExclamationTriangle, FaPlay, FaCheck, FaTrophy } from 'react-icons/fa'
 import SharePoster from '@/components/SharePoster'
 import { useSearchParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Copy } from 'lucide-react'
 import { EmbedDialog } from '@/components/EmbedDialog'
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import staticContent from '../alltoolslist.html'
 
 interface RankingResult {
   reactionTime: number;
@@ -23,10 +24,10 @@ export default function AudioReactionTime() {
   const isIframe = searchParams.get('embed') === 'true'
   const [showEmbedDialog, setShowEmbedDialog] = useState(false)
   const [embedUrl, setEmbedUrl] = useState('')
-  const [gameState, setGameState] = useState<'waiting' | 'ready' | 'toosoon' | 'testing' | 'result'>('waiting')
+  const [gameState, setGameState] = useState<'waiting' | 'ready' | 'toosoon' | 'testing' | 'result' | 'final'>('waiting')
   const [startTime, setStartTime] = useState(0)
   const [reactionTime, setReactionTime] = useState(0)
-  const [reactionTimes, setReactionTimes] = useState<number[]>([])
+  const [attempts, setAttempts] = useState<number[]>([])
   const [results, setResults] = useState<{
     regionalRanking: { name: string; data: RankingResult[] };
     nationalRanking: { name: string; data: RankingResult[] };
@@ -80,6 +81,11 @@ export default function AudioReactionTime() {
   }
 
   const handleClick = async () => {
+    if (gameState === 'waiting') {
+      handleStart()
+      return
+    }
+    
     const clearTime = Date.now()
     
     if (timerRef.current) {
@@ -98,26 +104,35 @@ export default function AudioReactionTime() {
         const endTime = Date.now()
         const time = endTime - startTime - (endTime - clearTime)
         setReactionTime(time)
-        setReactionTimes(prev => [...prev, time])
-        setGameState('result')
-        try {
-          const response = await fetch('/api/audio-reaction-time', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              reactionTime: time,
-              // 如果有用户ID，可以传入
-              // userId: currentUser?.id 
-            }),
-          })
+        
+        const newAttempts = [...attempts, time]
+        setAttempts(newAttempts)
+        
+        if (newAttempts.length >= 5) {
+          setGameState('final')
+          const avgTime = Math.round(newAttempts.reduce((a, b) => a + b, 0) / newAttempts.length)
+          setAverageTime(avgTime)
+          // 发送所有结果到后端
+          try {
+            const response = await fetch('/api/audio-reaction-time', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ 
+                reactionTimes: newAttempts,
+                averageTime: avgTime
+              }),
+            })
 
-          if (!response.ok) {
-            throw new Error('Failed to save result')
+            if (!response.ok) {
+              throw new Error('Failed to save result')
+            }
+          } catch (error) {
+            console.error('Error saving results:', error)
           }
-        } catch (error) {
-          console.error('Error saving result:', error)
+        } else {
+          setGameState('result')
         }
         break
       case 'result':
@@ -130,22 +145,28 @@ export default function AudioReactionTime() {
           timerRef.current = null
         }, delay)
         break
+      case 'final':
+        // 重置所有状态
+        setAttempts([])
+        setReactionTime(0)
+        setStartTime(0)
+        setGameState('waiting')
+        break
       default:
         handleStart()
     }
   }
 
   useEffect(() => {
-    if (reactionTimes.length > 0) {
-      setAverageTime(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length)
-      setBestTime(Math.min(...reactionTimes))
+    if (attempts.length > 0) {
+      setBestTime(Math.min(...attempts))
     }
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current)
       }
     }
-  }, [reactionTimes])
+  }, [attempts])
 
   const fetchRankings = async () => {
     try {
@@ -190,15 +211,21 @@ export default function AudioReactionTime() {
         }
       case 'testing':
         return { 
-          message: t("waitForBeep"),
-          description: t("click"), 
-          icon: <FaHourglassStart className="text-9xl text-white mb-8 animate-fade" />
+          message: t("click"),
+          description: '', 
+          icon: <FaPlay className="text-9xl text-white mb-8 animate-fade" />
         }
       case 'result':
         return { 
           message: `${t("reactionTime")}\n${reactionTime} ms`,
-          description: t("tryAgain"), 
+          description: `${t("attempt")} ${attempts.length}/5`, 
           icon: <FaCheck className="text-9xl text-white mb-8 animate-fade" />
+        }
+      case 'final':
+        return {
+          message: `${averageTime} ms`,
+          description: t("averageTime"),
+          icon: <FaTrophy className="text-9xl text-white mb-8 animate-fade" />
         }
     }
   }
@@ -217,253 +244,229 @@ export default function AudioReactionTime() {
   const { rank, totalUsers } = calculateRankInfo()
 
   const renderResultActions = () => {
-    if (gameState !== 'result') return null;
+    if (gameState !== 'result' && gameState !== 'final') return null;
 
     return (
-      <div className="flex gap-4 mt-6">
+      <div className="flex gap-4 mt-6" onClick={e => e.stopPropagation()}>
         <button
-          onClick={() => setGameState('ready')}
-          className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600"
+          onClick={() => {
+            if (gameState === 'final') {
+              setAttempts([])
+              setReactionTime(0)
+              setStartTime(0)
+              setGameState('waiting')
+            } else {
+              handleClick()
+            }
+          }}
+          className="bg-blue-500 text-white px-6 py-2 rounded-lg 
+                    hover:bg-blue-600 transition-colors duration-200
+                    flex items-center gap-2"
         >
-          {t('tryAgain')}
+          <i className={`fas ${gameState === 'final' ? 'fa-redo' : 'fa-forward'}`}></i>
+          {gameState === 'final' ? t('tryAgain') : t('continue')}
         </button>
-        <button
-          onClick={() => setShowSharePoster(true)}
-          className="bg-green-500 text-white py-2 px-6 rounded hover:bg-green-600"
-        >
-          {t('share')}
-        </button>
-
-        <SharePoster
-          reactionTime={reactionTime}
-          rank={rank}
-          totalUsers={totalUsers}
-          isOpen={showSharePoster}
-          testType="audio"
-          title={t("poster.title")}
-          onClose={() => setShowSharePoster(false)}
-        />
       </div>
     )
   }
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setEmbedUrl(`${window.location.origin}${window.location.pathname}?embed=true`)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (isIframe) {
-      const sendHeight = () => {
-        const height = document.querySelector('.banner')?.scrollHeight
-        if (height) {
-          window.parent.postMessage({ type: 'resize', height }, '*')
-        }
-      }
-
-      const observer = new ResizeObserver(sendHeight)
-      const banner = document.querySelector('.banner')
-      if (banner) {
-        observer.observe(banner)
-      }
-
-      if (gameState === 'result') {
-        window.parent.postMessage({
-          type: 'testComplete',
-          results: {
-            reactionTime: reactionTime,
-            averageTime: averageTime,
-            bestTime: bestTime,
-            rank: rank
-          }
-        }, '*')
-      }
-
-      return () => {
-        observer.disconnect()
-      }
-    }
-  }, [isIframe, gameState, reactionTime, averageTime, bestTime, rank])
 
   return (
-    <div className="w-full mx-auto py-0 space-y-16">
-      <div className={`
-        banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme
-        
-        transition-all duration-300 cursor-pointer user-select-none
-      `} 
-      onClick={handleClick}>
-        {icon}
-        <h1 className="text-7xl font-bold text-center mb-4 text-white user-select-none" 
-            dangerouslySetInnerHTML={{ __html: message }} />
-        <p className="text-3xl text-center mb-20 text-white user-select-none" 
-           dangerouslySetInnerHTML={{ __html: description?.replace(/\n/g, '<br />')  || ''}} />
-           {renderResultActions()}
-           {!isIframe && gameState === 'waiting' && (
-        <Button
-        className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3"
-        onClick={() => setShowEmbedDialog(true)}
-      >
-        <i className="fas fa-code mr-2" />
-        {te('button')}
-      </Button>
-      )}
-      </div>
-
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <div className="space-y-8">
-          <h2 className="text-3xl font-bold text-center mb-8 relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-24 after:h-1 after:bg-blue-500 after:rounded-full">
-            {t("rankingTitle")}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* 地区排名 */}
-            <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-              <h3 className="text-xl font-bold mb-6 pb-2 border-b border-gray-200 text-gray-800">
-                {results.cityRanking.name}
-              </h3>
-              <div className="space-y-3">
-                {results.regionalRanking.data?.map((result, index) => (
-                  <div 
-                    key={`regional-${index}`} 
-                    className={`flex justify-between items-center p-2 rounded-lg
-                      ${index === 0 ? 'bg-yellow-50' : 
-                        index === 1 ? 'bg-gray-50' : 
-                        index === 2 ? 'bg-orange-50' : 'hover:bg-gray-50'}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className={`w-6 h-6 flex items-center justify-center rounded-full 
-                        ${index === 0 ? 'bg-yellow-500' : 
-                          index === 1 ? 'bg-gray-400' : 
-                          index === 2 ? 'bg-orange-500' : 'bg-gray-200'} 
-                        text-white text-sm font-medium`}>
-                        {index + 1}
-                      </span>
-                      <span className="font-medium text-gray-800">{result.reactionTime}ms</span>
-                    </div>
-                    <span className="text-gray-500 text-sm">
-                      {new Date(result.timestamp).toLocaleDateString()}
-                    </span>
-                  </div>
-                ))}
-                {results.regionalRanking.data.length === 0 && (
-                  <div className="text-center text-gray-500 py-4">
-                    {t("noData")}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* 国家排名 */}
-            <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-              <h3 className="text-xl font-bold mb-6 pb-2 border-b border-gray-200 text-gray-800">
-                {results.nationalRanking.name}
-              </h3>
-              <div className="space-y-3">
-                {results.nationalRanking.data?.map((result, index) => (
-                  <div 
-                    key={`national-${index}`} 
-                    className={`flex justify-between items-center p-2 rounded-lg
-                      ${index === 0 ? 'bg-yellow-50' : 
-                        index === 1 ? 'bg-gray-50' : 
-                        index === 2 ? 'bg-orange-50' : 'hover:bg-gray-50'}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className={`w-6 h-6 flex items-center justify-center rounded-full 
-                        ${index === 0 ? 'bg-yellow-500' : 
-                          index === 1 ? 'bg-gray-400' : 
-                          index === 2 ? 'bg-orange-500' : 'bg-gray-200'} 
-                        text-white text-sm font-medium`}>
-                        {index + 1}
-                      </span>
-                      <span className="font-medium text-gray-800">{result.reactionTime}ms</span>
-                    </div>
-                    <span className="text-gray-500 text-sm">
-                      {new Date(result.timestamp).toLocaleDateString()}
-                    </span>
-                  </div>
-                ))}
-                {results.nationalRanking.data.length === 0 && (
-                  <div className="text-center text-gray-500 py-4">
-                    {t("noData")}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* 全球排名 */}
-            <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-              <h3 className="text-xl font-bold mb-6 pb-2 border-b border-gray-200 text-gray-800">
-                {results.globalRanking.name}
-              </h3>
-              <div className="space-y-3">
-                {results.globalRanking.data?.map((result, index) => (
-                  <div 
-                    key={`global-${index}`} 
-                    className={`flex justify-between items-center p-2 rounded-lg
-                      ${index === 0 ? 'bg-yellow-50' : 
-                        index === 1 ? 'bg-gray-50' : 
-                        index === 2 ? 'bg-orange-50' : 'hover:bg-gray-50'}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className={`w-6 h-6 flex items-center justify-center rounded-full 
-                        ${index === 0 ? 'bg-yellow-500' : 
-                          index === 1 ? 'bg-gray-400' : 
-                          index === 2 ? 'bg-orange-500' : 'bg-gray-200'} 
-                        text-white text-sm font-medium`}>
-                        {index + 1}
-                      </span>
-                      <span className="font-medium text-gray-800">{result.reactionTime}ms</span>
-                    </div>
-                    <span className="text-gray-500 text-sm">
-                      {new Date(result.timestamp).toLocaleDateString()}
-                    </span>
-                  </div>
-                ))}
-                {results.globalRanking.data.length === 0 && (
-                  <div className="text-center text-gray-500 py-4">
-                    {t("noData")}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div className="w-full h-[400px]">
-            <h2 className="text-xl mb-4 font-semibold">{t("statisticsTitle")}</h2>
-            <Image 
-              src='/audio-reactiontime-statistics.png' 
-              alt='Audio Reaction Time Statistics'
-              className='w-full h-full' 
-              width={400} 
-              height={400}
-            />
-          </div>
-          <div className="w-full h-[400px]">
-            <h2 className="text-xl mb-4 font-semibold">{t("aboutTitle")}</h2>
-            <p>{t("about")}</p>
-          </div>
-        </div>
-      </div>
-      <EmbedDialog 
-        isOpen={showEmbedDialog}
-        onClose={() => setShowEmbedDialog(false)}
-        embedUrl={embedUrl}
+    <>
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is a good audio reaction time?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A typical audio reaction time ranges from 140-160 milliseconds in healthy adults. Professional athletes and musicians often achieve times below 130 milliseconds through regular practice and training."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I improve my audio reaction time?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Regular practice, adequate sleep, proper nutrition, and focused attention during testing can help improve audio reaction time. Physical exercise and cognitive training exercises may also enhance overall reaction speed."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What factors affect audio reaction time?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Age, fatigue, stress, caffeine intake, and overall health can affect audio reaction time. Environmental factors like background noise and time of day may also impact performance."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why test audio reaction time?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Testing audio reaction time helps assess cognitive processing speed, neurological health, and overall alertness. It's particularly relevant for activities requiring quick responses to sound cues."
+                }
+              }
+            ]
+          })
+        }}
       />
+
+      {/* 游戏组件 */}
+      <div className="w-full mx-auto py-0 space-y-16">
+        <div 
+          className={`
+            relative banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme
+            transition-all duration-300 cursor-pointer user-select-none
+          `} 
+          onClick={handleClick}
+        >
+          {/* 进度指示器 */}
+          {gameState !== 'waiting' && (
+            <>
+              <div className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 flex-col gap-4">
+                {[...Array(5)].map((_, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div 
+                      className={`
+                        w-3 h-3 rounded-full transition-all duration-300
+                        ${attempts[index] ? 'bg-white' : 'bg-white/30'}
+                      `}
+                    />
+                    <div className={`
+                      transition-all duration-300
+                      ${attempts[index] 
+                        ? 'opacity-100 translate-x-0' 
+                        : 'opacity-0 -translate-x-2'}
+                    `}>
+                      <span className="text-white text-sm font-medium">
+                        {attempts[index] ? `${attempts[index]}ms` : ''}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="md:hidden absolute top-4 left-1/2 -translate-x-1/2 flex gap-2">
+                {[...Array(5)].map((_, index) => (
+                  <div key={index} className="flex flex-col items-center">
+                    <div 
+                      className={`
+                        w-2 h-2 rounded-full mb-1 transition-all duration-300
+                        ${attempts[index] ? 'bg-white' : 'bg-white/30'}
+                      `}
+                    />
+                    <span className={`
+                      text-xs text-white font-medium transition-all duration-300
+                      ${attempts[index] 
+                        ? 'opacity-100 scale-100' 
+                        : 'opacity-0 scale-95'}
+                    `}>
+                      {attempts[index] ? `${attempts[index]}` : ''}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* 主要内容 */}
+          {getGameStateMessage() && (
+            <>
+              {getGameStateMessage()?.icon}
+              <h1 
+                className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-4 text-white user-select-none" 
+                dangerouslySetInnerHTML={{ __html: getGameStateMessage()?.message || '' }} 
+              />
+              <p 
+                className="text-3xl text-center mb-20 text-white user-select-none" 
+                dangerouslySetInnerHTML={{ 
+                  __html: getGameStateMessage()?.description?.replace(/\n/g, '<br />') || ''
+                }} 
+              />
+            </>
+          )}
+
+          {/* 按钮区域 */}
+          {renderResultActions()}
+        </div>
       
-      <SharePoster
-        reactionTime={reactionTime}
-        rank={rank}
-        totalUsers={totalUsers}
-        isOpen={showSharePoster}
-        testType="audio"
-        title={t("poster.title")}
-        onClose={() => setShowSharePoster(false)}
-      />
-    </div>
+      
+      <div  className="container mx-auto py-0 space-y-16">
+      {/* 静态内容 */}
+      <div dangerouslySetInnerHTML={{ __html: staticContent }} />
+      {/* SEO Content Section */}
+      <section className="max-w-4xl mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Understanding Audio Reaction Time Testing
+        </h2>
+        
+        <div className="prose prose-blue max-w-none">
+          <p className="text-gray-700 leading-relaxed mb-4">
+            Audio reaction time testing measures your ability to respond quickly to sound stimuli, providing valuable insights into your auditory processing speed and cognitive function. This specialized test evaluates how fast your brain can process and respond to audio signals, which is crucial for many daily activities and professional skills.
+          </p>
+          
+          <p className="text-gray-700 leading-relaxed mb-4">
+            The audio reaction time test presents a simple beep sound at random intervals, challenging you to react as quickly as possible. Your reaction time is measured in milliseconds, allowing for precise assessment of your auditory response speed. This measurement helps identify patterns in your reaction capabilities and areas for potential improvement.
+          </p>
+          
+          <p className="text-gray-700 leading-relaxed">
+            Whether you're an athlete needing quick auditory reflexes, a musician timing your performances, or someone interested in cognitive performance, understanding your audio reaction time is essential. Regular testing and practice can help improve your reaction speed, contributing to better performance in various activities requiring quick auditory responses.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="max-w-4xl mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Frequently Asked Questions About Audio Reaction Time
+        </h2>
+        
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              What is a good audio reaction time?
+            </h3>
+            <p className="text-gray-700">
+              A typical audio reaction time ranges from 140-160 milliseconds in healthy adults. Professional athletes and musicians often achieve times below 130 milliseconds through regular practice and training. Your reaction time can vary based on factors like age, alertness, and overall health.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              How can I improve my audio reaction time?
+            </h3>
+            <p className="text-gray-700">
+              Regular practice with audio reaction tests, maintaining good sleep habits, proper nutrition, and staying focused during testing can help improve your reaction time. Physical exercise and cognitive training exercises may also enhance overall reaction speed. Consistency in practice is key to seeing improvements.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              What factors affect audio reaction time?
+            </h3>
+            <p className="text-gray-700">
+              Several factors can influence your audio reaction time, including age, fatigue levels, stress, caffeine intake, and overall health condition. Environmental factors such as background noise, time of day, and your level of concentration can also significantly impact your performance.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Why test audio reaction time?
+            </h3>
+            <p className="text-gray-700">
+              Testing audio reaction time helps assess cognitive processing speed, neurological health, and overall alertness. It's particularly important for activities requiring quick responses to sound cues, such as driving, sports, music performance, and various professional tasks requiring rapid auditory processing.
+            </p>
+          </div>
+        </div>
+      </section>
+      </div>
+      </div>
+    </>
   )
 } 
