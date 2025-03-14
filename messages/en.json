@@ -107,7 +107,7 @@
   },
   "reactionTime": {
     "meta_title": "Free Reaction Time Test | Human Benchmark | Reaction time",
-    "meta_description": "The Human Benchmark Reaction Time Test is a free online tool that accurately measures your response speed to visual,When the red box turns greeen,click as quickly as you can.",
+    "meta_description": "The Human Benchmark Reaction Time Test is a free online tool that accurately measures your response speed to visual",
     "h1":"Reaction Time Test",
     "h2":"",
     "description":"When the red box turns greeen,click as quickly as you can.<br/>Click anywhere to start.",
@@ -185,7 +185,7 @@
     }
   },
   "sequence": {
-    "meta_title": "Sequence Memory Test",
+    "meta_title": "Free Sequence Memory Test Online ｜ Human Benchmark Test",
     "meta_description": "The Sequence Memory Test assesses your ability to recall sequences of numbers, colors, or shapes, and it's a valuable tool for measuring short-term memory.",
     "h1":"",
     "h2":"Sequence Memory Test",
@@ -199,7 +199,7 @@
     "about": "Sequence Memory Test is a valuable tool for measuring short-term memory.<br/>Memorize the sequence of buttons that light up, then press them in order.<br/>Every time you finish the pattern, it gets longer.<br/>Make a mistake, and the test is over."
   },
   "aim": {
-    "meta_title": "Aim Trainer-test your aiming reaction time",
+    "meta_title": "Free Aim Trainer Online | Aim Test | Human Benchmark Test",
     "meta_description": "Aim Trainer can test your aiming reaction time. With the help of it, you can improve your aiming skills so as to achieve rapid and precise aiming.",
     "h1":"",
     "h2":"Aim Trainer",
@@ -211,7 +211,7 @@
     "about":"Click the targets as quickly and accurately as you can.<br/>This tests reflexes and hand-eye coordination.<br/>Once you've clicked 30 targets, your score and average time per target will be displayed.<br/>This test is best taken with a mouse or tablet screen. Trackpads are difficult to score well with."
   },
   "numberMemory": {
-    "meta_title": "Number Memory Test",
+    "meta_title": "Free Number Memory Test Online | Human Benchmark Test",
     "meta_description": "The average person can remember 7 numbers at onece.Can you do more?",
     "h1":"",
     "h2":"Number Memory Test",
@@ -229,7 +229,7 @@
     "about":"The average person can only remember 7 digit numbers reliably, but it's possible to do much better using mnemonic techniques. "
   },
   "memory": {
-    "meta_title": "Visual Memory Test",
+    "meta_title": "Free Visual Memory Test Online | Human Benchmark Test",
     "meta_description": "Memorize the squares",
     "h1":"",
     "h2":"Visual Memory Test",
@@ -242,7 +242,7 @@
     "about":"Every level, a number of tiles will flash white. Memorize them, and pick them again after the tiles are reset!<br/>Levels get progressively more difficult, to challenge your skills.<br/>If you miss 3 tiles on a level, you lose one life.<br/>You have three lives.<br/>Make it as far as you can!"
   },
   "verbalMemory": {
-    "meta_title": "Verbal Memory Test",
+    "meta_title": "Free Verbal Memory Test Online | Human Benchmark Test",
     "meta_description": "You will be shown words, one at a time.",
     "h1":"",
     "h2":"Verbal Memory Test",
@@ -257,8 +257,8 @@
     "about":"This test measures how many words you can keep in short term memory at once.<br/>The number of words you need to remember grows continually, until you can't keep them in your head anymore.<br/>Go as long as you can. You have 3 strikes until game over.<br/>Your score is how many turns you lasted."
   },
   "climp": {
-    "meta_title": "Chimp Test-Are You Smarter Than a Climp?",
-    "meta_description": "Climp Test，Click the squares in order according to their numbers.The test will get progressively harder.",
+    "meta_title": "Free Chimp Test Online | Human benchmark Test | Chimp",
+    "meta_description": "Are You Smarter Than a Climp? Climp Test，Click the squares in order according to their numbers.The test will get progressively harder.",
     "h1":"Chimpanzee Test",
     "h2":"Chimpanzee Test<br/>Are You Smarter Than a Chimpanzee?",
     "description":"Click the squares in order according to their numbers.<br/>The Chimpanzee Test will get progressively harder.",
@@ -270,7 +270,7 @@
     "about":"Chimpanzee Test is a test of working memory, made famous by a study that found that chimpanzees consistently outperform humans on this task.<br/>In the study, the chimps consistently outperformed humans, and some chimps were able to remember 9 digits over 90% of the time.<br/>This Chimpanzee Test is a variant of that concept, that gets increasingly difficult every turn, starting at 4 digits, and adding one every turn. If you pass a level, the number increases. If you fail, you get a strike. Three strikes and the test is over."
   },
   "typing": {
-    "meta_title": "Typing Test",
+    "meta_title": "Free Typing Online | Human Benchmark Test | Typing test",
     "meta_description": "This test measures your typing speed in words per minute. It's a simple and effective way to gauge your typing efficiency. The test will display your typing speed, and you can try multiple times to see your average performance.",
     "h1":"",
     "h2":"Typing Test",
@@ -315,7 +315,7 @@
 
   },
   "timePerception": {
-    "meta_title": "Time Perception Test",
+    "meta_title": "Free Time Perception Test Online | Time Test | Human Benchmark Test",
     "meta_description": "Test your time perception ability.Measure the difference between the time you perceive and the actual time.",
     "h1":"",
     "h2":"Time Perception Test",
@@ -327,7 +327,7 @@
     "about": "Time Perception Test is a test of time perception ability. The Time Perception Test will display your time perception, and you can try multiple times to see your average performance."
   },
   "colorPerception": {
-    "meta_title": "Color Perception Test",
+    "meta_title": "Free Color Perception Test Online | Color Test | Human Benchmark Test",
     "meta_description": "Test your color perception ability.",
     "h1":"",
     "h2":"Color Perception Test",
@@ -339,7 +339,7 @@
     "about": "Color Perception Test is a test of color perception ability. The Color Perception Test will display your color perception, and you can try multiple times to see your average performance."
   },
   "colorBlindness": {
-    "meta_title": "Color Blindness Test",
+    "meta_title": "Free Color Blindness Test Online | Human Benchmark Test",
     "meta_description": "Test your color vision with these Ishihara plates",
     "h1":"",
     "h2": "Color Blindness Test",
@@ -473,7 +473,7 @@
     }
   },
   "audioReaction": {
-    "meta_title": "Audiao Reaction time | Audio Reaction Time Test | Human Benchmark Test",
+    "meta_title": "Free Audiao Reaction time Test Online | Sound Reaction Time Test",
     "meta_description": "Test your audio reaction speed and improve your reflexes with Audio Reaction Time Test! track your stats and  your world ranking.",
     "h1": "Audio Reaction Time Test",
     "description": "Click to start and click when you hear the beep",
@@ -511,7 +511,7 @@
     }
   },
   "perfectPitch": {
-    "meta_title": "Perfect Pitch Test",
+    "meta_title": "Free Perfect Pitch Test Online | Human Benchmark Test",
     "meta_description": "Test your ability to identify musical notes by ear",
     "h1": "Perfect Pitch Test",
     "description": "Test your ability to identify musical notes by ear",
@@ -531,7 +531,7 @@
     "remainingNotes": "Remaining notes to select"
   },
   "faceRecognition": {
-    "meta_title": "Face Recognition Test",
+    "meta_title": "Free Face Recognition Test Online | Human Benchmark Test",
     "meta_description": "Test your face recognition ability，The higher the accuracy and the faster the speed, the stronger your right-brain ability is proven to be.",
     "h1": "Face Recognition Test",
     "description": "Test your face recognition ability，The higher the accuracy and the faster the speed, the stronger your right-brain ability is proven to be.",
@@ -554,7 +554,7 @@
     "about": "The Face Recognition Test is designed to measure your ability to recognize and remember human faces. Starting from Level 1 with a single face, the challenge progressively increases up to Level 9. In each level, you'll be shown faces to memorize, followed by a selection phase where you need to identify the faces you've seen before among new ones. This Face Recognition Test helps evaluate your facial recognition abilities, which is a crucial skill in social interactions and various professional fields. A score above 70% is required to advance to the next level. The Face Recognition Test measures both accuracy and reaction time, providing a comprehensive assessment of your face recognition capabilities."
   },
   "cpt": {
-    "meta_title": "Continuous Performance Test（CPT-II）",
+    "meta_title": "Continuous Performance Test（CPT-II）| Human Benchmark Test",
     "meta_description": "Test your continuous performance ability",
     "h1": "Continuous Performance Test（CPT-II）",
     "description": "Click anywhere on the screen when you see the letter \"X\"",

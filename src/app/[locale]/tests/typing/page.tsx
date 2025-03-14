@@ -5,6 +5,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { EmbedDialog } from '@/components/EmbedDialog'
+import staticContent from '../alltoolslist.html'
 
 export default function TypingTest() {
   const [gameState, setGameState] = useState<'start' | 'playing' | 'result'>('start')
@@ -120,7 +121,60 @@ export default function TypingTest() {
   }, [isIframe, gameState, finalWPM, accuracy, errors, finalTime])
 
   return (
-    <div className="w-full">
+    <>
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is a good Typing Test score?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "In the Typing Test, 50-70 WPM (Words Per Minute) is considered good for casual typing, while 70-90 WPM is professional level. Advanced typists often achieve 90-120 WPM. Professional typists can exceed 120 WPM with high accuracy."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I improve my typing speed?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Regular practice with the Typing Test, proper finger positioning, touch typing techniques, and maintaining good posture can improve your speed. Focus on accuracy first, and speed will naturally follow with consistent practice."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What factors affect Typing Test performance?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Keyboard quality, typing technique, finger dexterity, and practice frequency affect Typing Test results. Familiarity with the keyboard layout and overall typing experience also significantly impact performance."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How often should I practice typing?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "For optimal improvement, practice the Typing Test for 15-20 minutes daily. Regular, focused practice sessions are more effective than longer, irregular sessions. Consistent practice helps build muscle memory."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why is typing speed important?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Fast, accurate typing is essential for productivity in most modern professions. Good typing skills save time, reduce fatigue, and allow you to focus more on content creation rather than the mechanical process of typing."
+                }
+              }
+            ]
+          })
+        }}
+      />
+
       <div className="w-full mx-auto py-0 space-y-16">
         <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme text-white">
           {gameState === 'start' && (
@@ -221,35 +275,93 @@ export default function TypingTest() {
             </div>
           )}
         </div>
-      </div>
 
-      <div className="container mx-auto py-0 space-y-16">
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="w-full h-[400px]">
-              <h2  className="text-xl mb-4 font-semibold">{t("statisticsTitle")}</h2>
-              <Image 
-                src='/typing-statistics.png' 
-                alt='{t("statisticsTitle")}'
-                className='w-full h-full' 
-                width={400} 
-                height={400}
-              />
+        <div className="container mx-auto py-0 space-y-16">
+           {/* 静态内容 */}
+           <div dangerouslySetInnerHTML={{ __html: staticContent }} />
+           
+          {/* SEO Content Section */}
+          <section className="max-w-4xl mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Understanding the Typing Test
+            </h2>
+            
+            <div className="prose prose-blue max-w-none">
+              <p className="text-gray-700 leading-relaxed mb-4">
+                The Typing Test is a comprehensive assessment tool designed to measure your typing speed and accuracy. This professional-grade test evaluates both your Words Per Minute (WPM) and accuracy percentage, providing detailed insights into your typing proficiency. The Typing Test helps users identify areas for improvement and track progress over time.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed mb-4">
+                During the Typing Test, participants type a series of words or passages while being timed. The Typing Test calculates your WPM while accounting for errors, giving you a true measure of your typing efficiency. Each session provides immediate feedback on your performance, including detailed statistics about your typing speed and accuracy.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed mb-4">
+                Regular practice with the Typing Test can significantly improve your typing skills. Many professionals use the Typing Test to enhance their workplace efficiency and productivity. The test's varied content ensures that users develop well-rounded typing abilities across different types of text.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed">
+                Whether you're a student looking to improve academic performance or a professional seeking to enhance workplace efficiency, the Typing Test offers a practical approach to skill development. The test's design focuses on both speed and accuracy, making it an effective tool for comprehensive typing improvement.
+              </p>
             </div>
-            <div className="w-full h-[400px]">
-              <h2  className="text-xl mb-4 font-semibold">{t("aboutTitle")}</h2>
-              <p  dangerouslySetInnerHTML={{ __html: t("about")?.replace(/\n/g, '<br />')  || ''}} >
-                      </p>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="max-w-4xl mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              FAQ About Typing Test
+            </h2>
+            
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  What is a good Typing Test score?
+                </h3>
+                <p className="text-gray-700">
+                  In the Typing Test, 50-70 WPM is considered good for casual typing, while 70-90 WPM is professional level. Advanced typists often achieve 90-120 WPM. Professional typists can exceed 120 WPM with high accuracy.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  How can I improve my typing speed?
+                </h3>
+                <p className="text-gray-700">
+                  Regular practice with the Typing Test, proper finger positioning, touch typing techniques, and maintaining good posture can improve your speed. Focus on accuracy first, and speed will naturally follow with consistent practice.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  What factors affect Typing Test performance?
+                </h3>
+                <p className="text-gray-700">
+                  Keyboard quality, typing technique, finger dexterity, and practice frequency affect Typing Test results. Familiarity with the keyboard layout and overall typing experience also significantly impact performance.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  How often should I practice typing?
+                </h3>
+                <p className="text-gray-700">
+                  For optimal improvement, practice the Typing Test for 15-20 minutes daily. Regular, focused practice sessions are more effective than longer, irregular sessions. Consistent practice helps build muscle memory.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Why is typing speed important?
+                </h3>
+                <p className="text-gray-700">
+                  Fast, accurate typing is essential for productivity in most modern professions. Good typing skills save time, reduce fatigue, and allow you to focus more on content creation rather than the mechanical process of typing.
+                </p>
+              </div>
             </div>
-          </div>
+          </section>
+
+         
         </div>
       </div>
-
-      <EmbedDialog 
-        isOpen={showEmbedDialog}
-        onClose={() => setShowEmbedDialog(false)}
-        embedUrl={embedUrl}
-      />
-    </div>
+    </>
   )
 } 

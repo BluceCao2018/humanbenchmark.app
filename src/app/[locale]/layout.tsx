@@ -26,7 +26,7 @@ const sansFont = DM_Sans({
 export const metadata: Metadata = {
   title: {
     default: '',
-    template: '%s | Fun Benchmark'
+    template: '%s'
   },
   description: '',
   authors: { name: '', url: '' },
@@ -79,7 +79,7 @@ export default async function RootLayout({
           <NextIntlClientProvider messages={messages}>
             <ThemeProvider attribute="class" forcedTheme="light">
               <GoogleOAuthProvider clientId={clientId}>
-                <Layout params={params} searchParams={searchParams}>{children}</Layout>
+                <Layout>{children}</Layout>
                 <GoogleAdsenseScript />
                 <GoogleAnalyticsScript />
                 <PlausibleAnalyticsScript />

@@ -8,6 +8,7 @@ import { FaFaceSmile } from 'react-icons/fa6'
 import { Breadcrumb, BreadcrumbPage, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator, BreadcrumbLink } from '@/components/ui/breadcrumb'
 import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import staticContent from '../alltoolslist.html'
 
 export default function FaceRecognitionTest() {
   const t = useTranslations('faceRecognition')
@@ -207,137 +208,200 @@ export default function FaceRecognitionTest() {
   }, [isIframe, phase, level, accuracy, averageReactionTime])
 
   return (
-    <div className="w-full mx-auto">
-      <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme">
-        {!isGameStarted ? (
-          <>
-          <div className="flex flex-col justify-center items-center text-white">
-            <FaFaceSmile className="text-9xl mb-8 animate-fade" />
-            <h1 className="text-4xl font-bold text-center mb-4">{t("h1")}</h1>
-            <p className="text-lg text-center mb-20">{t("description")}</p>
-          </div>
-             
-            <div className="flex gap-4 justify-center items-center">
-            <Button
-              onClick={startTest}
-              className="mx-auto block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600  shadow-md transition-colors"
-            >
-              {t('startTest')}
-            </Button>
-            {!isIframe && (
-              <Button
-                className="bg-yellow-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-yellow-700 transition-colors"
-                onClick={() => setShowEmbedDialog(true)}
-              >
-                 <i className="fas fa-code mr-2" />
-                {te('button')}
-              </Button>)}
+    <>
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is Face Recognition Memory?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Face recognition memory is the ability to remember and identify faces you've seen before. It's a specialized cognitive skill that involves different brain processes than object recognition and is crucial for social interaction."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I improve my Face Recognition ability?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Regular practice with face recognition exercises, paying attention to distinctive facial features, and getting adequate sleep can help improve face recognition ability. Some people also benefit from mindfulness techniques and reduced stress levels."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is Prosopagnosia?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Prosopagnosia, or face blindness, is a cognitive disorder that affects the ability to recognize faces. It can be present from birth (developmental) or occur after brain injury (acquired). People with prosopagnosia often rely on voice, clothing, or context to identify others."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why is Face Recognition important?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Face recognition is crucial for social interaction, personal relationships, and professional networking. It helps us identify friends, family, and colleagues, and is important for social and emotional intelligence."
+                }
+              }
+            ]
+          })
+        }}
+      />
+
+      <div className="w-full mx-auto">
+        <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme">
+          {!isGameStarted ? (
+            <>
+            <div className="flex flex-col justify-center items-center text-white">
+              <FaFaceSmile className="text-9xl mb-8 animate-fade" />
+              <h1 className="text-4xl font-bold text-center mb-4">{t("h1")}</h1>
+              <p className="text-lg text-center mb-20">{t("description")}</p>
             </div>
-          </>
-        ) : (
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            {phase === 'learning' && (
-              <div className="w-full max-w-5xl px-4">
-                <div className="flex justify-between items-center mb-8">
-                  <div className="flex items-center gap-4">
-                    <p className="text-xl font-semibold">{t('level')} {level}</p>
-                    <p className="text-xl font-semibold">{t('memorizefaces')}</p>
-                  </div>
-                  <div className="text-2xl font-bold text-blue-600">
-                    {timeLeft}s
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-                  {learningFaces.map((face, index) => (
-                    <div 
-                      key={index} 
-                      className="aspect-square relative rounded-lg overflow-hidden shadow-lg"
-                      style={{ minHeight: '150px', maxHeight: '300px' }}
-                    >
-                      <Image
-                        src={face}
-                        alt={`Face ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
+               
+              <div className="flex gap-4 justify-center items-center">
+              <Button
+                onClick={startTest}
+                className="mx-auto block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600  shadow-md transition-colors"
+              >
+                {t('startTest')}
+              </Button>
               </div>
-            )}
-
-            {phase === 'testing' && (
-              <div className="w-full max-w-6xl px-4">
-                <p className="text-xl font-semibold text-center mb-8">{t('selectFamiliarFaces')}</p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-8">
-                  {testingFaces.map((face, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleFaceSelect(index)}
-                      className={`aspect-square relative rounded-lg overflow-hidden cursor-pointer shadow-lg transition-all ${
-                        selectedFaces.has(index) 
-                          ? 'ring-4 ring-blue-500 scale-105' 
-                          : 'hover:scale-105'
-                      }`}
-                      style={{ minHeight: '120px', maxHeight: '250px' }}
-                    >
-                      <Image
-                        src={face}
-                        alt={`Test face ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
+            </>
+          ) : (
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              {phase === 'learning' && (
+                <div className="w-full max-w-5xl px-4">
+                  <div className="flex justify-between items-center mb-8">
+                    <div className="flex items-center gap-4">
+                      <p className="text-xl font-semibold">{t('level')} {level}</p>
+                      <p className="text-xl font-semibold">{t('memorizefaces')}</p>
                     </div>
-                  ))}
-                </div>
-                <button
-                  onClick={submitTest}
-                  className="mt-8 mx-auto block bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 text-lg font-semibold shadow-lg transition-colors"
-                >
-                  {t('submit')}
-                </button>
-              </div>
-            )}
-
-            {phase === 'results' && results && (
-              <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 px-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-2xl font-bold text-gray-800">{t('level')} {level}</h2>
-                  <h3 className="text-xl text-gray-600">{t('results')}</h3>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-gray-50 rounded-lg p-4 text-center">
-                    <p className="text-sm text-gray-600 mb-1">{t('correctSelections')}</p>
-                    <span className="text-2xl font-bold text-green-600">{results.correctSelections}</span>
+                    <div className="text-2xl font-bold text-blue-600">
+                      {timeLeft}s
+                    </div>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4 text-center">
-                    <p className="text-sm text-gray-600 mb-1">{t('falsePositives')}</p>
-                    <span className="text-2xl font-bold text-red-600">{results.falsePositives}</span>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-4 text-center">
-                    <p className="text-sm text-gray-600 mb-1">{t('accuracy')}</p>
-                    <span className="text-2xl font-bold text-blue-600">{results.accuracy.toFixed(1)}%</span>
-                  </div>
-                  <div className="bg-gray-50 rounded-lg p-4 text-center">
-                    <p className="text-sm text-gray-600 mb-1">{t('reactionTime')}</p>
-                    <span className="text-2xl font-bold text-purple-600">{results.reactionTime.toFixed(1)}s</span>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  {results.accuracy >= 70 && level < 9 ? (
-                    <>
-                      <button
-                        onClick={() => {
-                          setSelectedFaces(new Set())
-                          setResults(null)
-                          startTest()
-                        }}
-                        className="w-full bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 text-base font-semibold shadow-lg transition-colors"
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+                    {learningFaces.map((face, index) => (
+                      <div 
+                        key={index} 
+                        className="aspect-square relative rounded-lg overflow-hidden shadow-lg"
+                        style={{ minHeight: '150px', maxHeight: '300px' }}
                       >
-                        {t('nextLevel')}
-                      </button>
+                        <Image
+                          src={face}
+                          alt={`Face ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {phase === 'testing' && (
+                <div className="w-full max-w-6xl px-4">
+                  <p className="text-xl font-semibold text-center mb-8">{t('selectFamiliarFaces')}</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-8">
+                    {testingFaces.map((face, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleFaceSelect(index)}
+                        className={`aspect-square relative rounded-lg overflow-hidden cursor-pointer shadow-lg transition-all ${
+                          selectedFaces.has(index) 
+                            ? 'ring-4 ring-blue-500 scale-105' 
+                            : 'hover:scale-105'
+                        }`}
+                        style={{ minHeight: '120px', maxHeight: '250px' }}
+                      >
+                        <Image
+                          src={face}
+                          alt={`Test face ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={submitTest}
+                    className="mt-8 mx-auto block bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 text-lg font-semibold shadow-lg transition-colors"
+                  >
+                    {t('submit')}
+                  </button>
+                </div>
+              )}
+
+              {phase === 'results' && results && (
+                <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 px-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-gray-800">{t('level')} {level}</h2>
+                    <h3 className="text-xl text-gray-600">{t('results')}</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="bg-gray-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-gray-600 mb-1">{t('correctSelections')}</p>
+                      <span className="text-2xl font-bold text-green-600">{results.correctSelections}</span>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-gray-600 mb-1">{t('falsePositives')}</p>
+                      <span className="text-2xl font-bold text-red-600">{results.falsePositives}</span>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-gray-600 mb-1">{t('accuracy')}</p>
+                      <span className="text-2xl font-bold text-blue-600">{results.accuracy.toFixed(1)}%</span>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4 text-center">
+                      <p className="text-sm text-gray-600 mb-1">{t('reactionTime')}</p>
+                      <span className="text-2xl font-bold text-purple-600">{results.reactionTime.toFixed(1)}s</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {results.accuracy >= 70 && level < 9 ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            setSelectedFaces(new Set())
+                            setResults(null)
+                            startTest()
+                          }}
+                          className="w-full bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 text-base font-semibold shadow-lg transition-colors"
+                        >
+                          {t('nextLevel')}
+                        </button>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            onClick={() => {
+                              setSelectedFaces(new Set())
+                              setResults(null)
+                              startTest()
+                            }}
+                            className="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 text-base font-semibold shadow-lg transition-colors"
+                          >
+                            {t('tryAgain')}
+                          </button>
+                          <button
+                            onClick={() => {
+                              setLevel(1)
+                              setSelectedFaces(new Set())
+                              setResults(null)
+                              setIsGameStarted(false)
+                            }}
+                            className="w-full bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 text-base font-semibold shadow-lg transition-colors"
+                          >
+                            {t('restart')}
+                          </button>
+                        </div>
+                      </>
+                    ) : (
                       <div className="grid grid-cols-2 gap-3">
                         <button
                           onClick={() => {
@@ -361,74 +425,108 @@ export default function FaceRecognitionTest() {
                           {t('restart')}
                         </button>
                       </div>
-                    </>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        onClick={() => {
-                          setSelectedFaces(new Set())
-                          setResults(null)
-                          startTest()
-                        }}
-                        className="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 text-base font-semibold shadow-lg transition-colors"
-                      >
-                        {t('tryAgain')}
-                      </button>
-                      <button
-                        onClick={() => {
-                          setLevel(1)
-                          setSelectedFaces(new Set())
-                          setResults(null)
-                          setIsGameStarted(false)
-                        }}
-                        className="w-full bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 text-base font-semibold shadow-lg transition-colors"
-                      >
-                        {t('restart')}
-                      </button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {phase === 'loading' && (
-              <div className="text-center py-12">
-                <i className="fas fa-spinner fa-spin text-4xl text-blue-500 mb-4"></i>
-                <p className="text-xl text-gray-600">Loading faces...</p>
-              </div>
-            )}
+              {phase === 'loading' && (
+                <div className="text-center py-12">
+                  <i className="fas fa-spinner fa-spin text-4xl text-blue-500 mb-4"></i>
+                  <p className="text-xl text-gray-600">Loading faces...</p>
+                </div>
+              )}
 
-            {phase === 'error' && (
-              <div className="text-center py-12">
-                <i className="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
-                <p className="text-xl text-gray-600 mb-6">Error loading faces. Please try again.</p>
-                <button
-                  onClick={startTest}
-                  className="mx-auto block bg-blue-500 text-white px-8 py-4 rounded-lg hover:bg-blue-600 text-lg font-semibold shadow-lg transition-colors"
-                >
-                  {t('tryAgain')}
-                </button>
-              </div>
-            )}
+              {phase === 'error' && (
+                <div className="text-center py-12">
+                  <i className="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                  <p className="text-xl text-gray-600 mb-6">Error loading faces. Please try again.</p>
+                  <button
+                    onClick={startTest}
+                    className="mx-auto block bg-blue-500 text-white px-8 py-4 rounded-lg hover:bg-blue-600 text-lg font-semibold shadow-lg transition-colors"
+                  >
+                    {t('tryAgain')}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="container mx-auto py-0 space-y-16">
+          
+        
+      {/* 静态内容 */}
+      <div dangerouslySetInnerHTML={{ __html: staticContent }} />
+
+      {/* SEO Content Section */}
+      <section className="max-w-4xl mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Understanding Face Recognition Testing
+        </h2>
+        
+        <div className="prose prose-blue max-w-none">
+          <p className="text-gray-700 leading-relaxed mb-4">
+            Face recognition testing evaluates your ability to remember and identify faces, a crucial skill for social interaction and daily life. This cognitive ability involves complex neural processes distinct from general object recognition, making it a unique aspect of human perception.
+          </p>
+          
+          <p className="text-gray-700 leading-relaxed mb-4">
+            The test challenges your ability to memorize faces quickly and recall them accurately, simulating real-world scenarios where rapid face learning and recognition are important. Understanding your face recognition abilities can provide insights into your social cognitive skills.
+          </p>
+          
+          <p className="text-gray-700 leading-relaxed">
+            Whether you're interested in improving your social memory or concerned about face recognition difficulties, this test offers a structured way to assess and track your face recognition capabilities over time.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="max-w-4xl mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Frequently Asked Questions About Face Recognition
+        </h2>
+        
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              What is Face Recognition Memory?
+            </h3>
+            <p className="text-gray-700">
+              Face recognition memory is the ability to remember and identify faces you've seen before. It's a specialized cognitive skill that involves different brain processes than object recognition and is crucial for social interaction.
+            </p>
           </div>
-        )}
-      </div>
 
-      <div className="container mx-auto py-0 space-y-16">
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="w-full h-[400px]">
-              <h2 className="text-xl mb-4 font-semibold text-gray-800">{t("statisticsTitle")}</h2>
-            </div>
-            <div className="w-full h-[400px]">
-              <h2 className="text-xl mb-4 font-semibold text-gray-800">{t("aboutTitle")}</h2>
-              <p className="text-gray-600" 
-                 dangerouslySetInnerHTML={{ __html: t("about")?.replace(/\n/g, '<br />') || '' }}>
-              </p>
-            </div>
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              How can I improve my Face Recognition ability?
+            </h3>
+            <p className="text-gray-700">
+              Regular practice with face recognition exercises, paying attention to distinctive facial features, and getting adequate sleep can help improve face recognition ability. Some people also benefit from mindfulness techniques and reduced stress levels.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              What is Prosopagnosia?
+            </h3>
+            <p className="text-gray-700">
+              Prosopagnosia, or face blindness, is a cognitive disorder that affects the ability to recognize faces. It can be present from birth (developmental) or occur after brain injury (acquired). People with prosopagnosia often rely on voice, clothing, or context to identify others.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Why is Face Recognition important?
+            </h3>
+            <p className="text-gray-700">
+              Face recognition is crucial for social interaction, personal relationships, and professional networking. It helps us identify friends, family, and colleagues, and is important for social and emotional intelligence.
+            </p>
           </div>
         </div>
+      </section>
+
       </div>
-    </div>
+      </div>
+    </>
   )
 } 

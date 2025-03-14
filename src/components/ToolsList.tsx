@@ -251,13 +251,15 @@ export const AllToolsList = ({ tools, locale }: { tools: toolProps[], locale: st
             target="_blank"
             rel="noopener noreferrer"
             className="block"
+            title={`Visit ${resource.name} - ${resource.description}`}
           >
             {/* 图片容器 */}
             <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-blue-100 to-blue-50">
               {resource.thumb ? (
                 <Image
                   src={resource.thumb}
-                  alt={resource.name}
+                  alt={`${resource.name} thumbnail`}
+                  title={`${resource.name} - ${resource.description}`}
                   quality={10}
                   loading="lazy"
                   fill
@@ -267,7 +269,8 @@ export const AllToolsList = ({ tools, locale }: { tools: toolProps[], locale: st
                 <div className="absolute inset-0 flex items-center justify-center">
                   {React.createElement(iconMap[resource.icon] || FaLink, { 
                     size: 80, 
-                    className: "text-blue-600/50 transition-colors duration-300 group-hover:text-blue-500" 
+                    className: "text-blue-600/50 transition-colors duration-300 group-hover:text-blue-500",
+                    title: `${resource.name} - ${resource.description}`
                   })}
                 </div>
               )}

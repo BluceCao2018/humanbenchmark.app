@@ -1,14 +1,10 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { useTranslations } from 'next-intl'
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import Image from 'next/image'
-import { useSearchParams } from 'next/navigation'
-import { Button } from "@/components/ui/button"
-import { Copy } from 'lucide-react'
-import { EmbedDialog } from '@/components/EmbedDialog'
+import { useTranslations } from 'use-intl';
+import staticContent from '../alltoolslist.html'
 
-export default function AimTrainerTest() {
+export default async function AimTrainerTest() {
   const [gameState, setGameState] = useState<'start' | 'playing' | 'result'>('start')
   const [targetPosition, setTargetPosition] = useState<{ x: number, y: number } | null>(null)
   const [stats, setStats] = useState({
@@ -20,13 +16,8 @@ export default function AimTrainerTest() {
   const [remainingCount, setRemainingCount] =useState(30)
   const [lastClickTime, setLastClickTime] = useState(0)
 
-  const t =  useTranslations('aim');
-  const te = useTranslations('embed');
+  const t = useTranslations('aim');
   
-  const searchParams = useSearchParams()
-  const isIframe = searchParams.get('embed') === 'true'
-  const [showEmbedDialog, setShowEmbedDialog] = useState(false)
-  const [embedUrl, setEmbedUrl] = useState('')
 
   const startGame = () => {
     setGameState('playing')
@@ -109,142 +100,196 @@ export default function AimTrainerTest() {
       : '0'
   }
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setEmbedUrl(`${window.location.origin}${window.location.pathname}?embed=true`)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (isIframe) {
-      const sendHeight = () => {
-        const height = document.querySelector('.banner')?.scrollHeight
-        if (height) {
-          window.parent.postMessage({ type: 'resize', height }, '*')
-        }
-      }
-
-      const observer = new ResizeObserver(sendHeight)
-      const banner = document.querySelector('.banner')
-      if (banner) {
-        observer.observe(banner)
-      }
-
-      if (gameState === 'result') {
-        window.parent.postMessage({
-          type: 'testComplete',
-          results: {
-            totalClicks: stats.totalClicks,
-            correctClicks: stats.correctClicks,
-            accuracy: ((stats.correctClicks / stats.totalClicks) * 100).toFixed(1),
-            averageReactionTime: stats.reactionTimes.length > 0 
-              ? Math.round(stats.reactionTimes.reduce((a, b) => a + b) / stats.reactionTimes.length)
-              : 0
-          }
-        }, '*')
-      }
-
-      return () => {
-        observer.disconnect()
-      }
-    }
-  }, [isIframe, gameState, stats])
-
   return (
-    <div 
-      className="w-full mx-auto py-0 space-y-16 "
-    >
-      <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme">
-       
-        {gameState === 'start' && (
-          <div className='flex flex-col justify-center items-center'>
-            <i className="fas fa-bullseye text-9xl text-white mb-8 animate-fade cursor-pointer" onClick={startGame} ></i>
-            <h1 className="text-4xl font-bold text-center mb-4 text-white">{t("h2")}</h1>
-            <p className="text-lg text-center mb-20 text-white" dangerouslySetInnerHTML={{ __html: t("description")?.replace(/\n/g, '<br />')  || ''}} ></p>
-            {!isIframe && (
-       <Button
-       className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3"
-       onClick={() => setShowEmbedDialog(true)}
-     >
-       <i className="fas fa-code mr-2" />
-       {te('button')}
-     </Button>
-      )}
-          </div>
+    <>
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is a good Aim Trainer score?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "In Aim Trainer tests, hitting targets within 250-300ms is considered good. Professional gamers often achieve times under 200ms, while average users typically score between 300-400ms per target."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I improve my Aim Trainer performance?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Regular practice with the Aim Trainer, maintaining consistent mouse sensitivity, proper posture, and focused training sessions can improve your performance. Many users see improvements with 15-20 minutes of daily practice."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What factors affect Aim Trainer results?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Mouse sensitivity, screen resolution, hand-eye coordination, and physical fatigue all affect Aim Trainer performance. Your setup, including mouse quality and desk ergonomics, also plays a crucial role."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How often should I use the Aim Trainer?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "For optimal results, use the Aim Trainer for 15-20 minutes daily. Consistent, shorter practice sessions are more effective than longer, irregular training periods."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why is Aim Trainer important for gaming?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The Aim Trainer is essential for developing precise mouse control, improving reaction times, and building muscle memory. It's particularly valuable for FPS games where accurate targeting is crucial."
+                }
+              }
+            ]
+          })
+        }}
+      />
+
+      <div className="w-full mx-auto py-0 space-y-16">
+        <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme">
+         
+          {gameState === 'start' && (
+            <div className='flex flex-col justify-center items-center'>
+              <i className="fas fa-bullseye text-9xl text-white mb-8 animate-fade cursor-pointer" onClick={startGame} ></i>
+              <h1 className="text-4xl font-bold text-center mb-4 text-white">{t("h2")}</h1>
+              <p className="text-lg text-center mb-20 text-white" dangerouslySetInnerHTML={{ __html: t("description")?.replace(/\n/g, '<br />')  || ''}} ></p>
+            </div>
+            )}
+
+          {gameState === 'playing' && targetPosition && (
+            <div className='flex flex-col justify-center items-center text-white'>
+            <div 
+              onClick={handleTargetClick}
+              className='animate-fade'
+              style={{
+                position: 'absolute', 
+                left: `${targetPosition.x}px`, 
+                top: `${targetPosition.y}px`, 
+                width: '100px', 
+                height: '100px', 
+                cursor: 'pointer',
+                zIndex: 1000 // 确保在最上层
+              }}
+            >
+              <i className="fas fa-bullseye text-white" style={{ fontSize: '100px' }}></i>
+            </div>
+            <h2 className="text-2xl font-bold mb-4">Remaining {remainingCount}</h2>
+            </div>
           )}
 
-        {gameState === 'playing' && targetPosition && (
-          <div className='flex flex-col justify-center items-center text-white'>
-          <div 
-            onClick={handleTargetClick}
-            className='animate-fade'
-            style={{
-              position: 'absolute', 
-              left: `${targetPosition.x}px`, 
-              top: `${targetPosition.y}px`, 
-              width: '100px', 
-              height: '100px', 
-              cursor: 'pointer',
-              zIndex: 1000 // 确保在最上层
-            }}
-          >
-            <i className="fas fa-bullseye text-white" style={{ fontSize: '100px' }}></i>
+          {gameState === 'result' && (
+            <div className="text-center text-white">
+              <i className="fas fa-bullseye text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
+              <h2 className="text-2xl font-bold mb-4">Average time per target</h2>
+              <h1  className="text-5xl font-bold mb-4">{calculateAverageReactionTime()}ms</h1>
+              <button 
+                onClick={() => setGameState('start')}
+                className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+              >
+                {t("tryAgain")}
+              </button>
+            </div>
+          )}
           </div>
-          <h2 className="text-2xl font-bold mb-4">Remaining {remainingCount}</h2>
-          </div>
-        )}
+       
+        
 
-        {gameState === 'result' && (
-          <div className="text-center text-white">
-            <i className="fas fa-bullseye text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
-            <h2 className="text-2xl font-bold mb-4">Average time per target</h2>
-            <h1  className="text-5xl font-bold mb-4">{calculateAverageReactionTime()}ms</h1>
-            <button 
-              onClick={() => setGameState('start')}
-              className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
-            >
-              {t("tryAgain")}
-            </button>
+  <div className="container mx-auto py-0 space-y-16">
+            {/* 静态内容 */}
+        <div dangerouslySetInnerHTML={{ __html: staticContent }} />
+        
+        {/* SEO Content Section */}
+        <section className="max-w-4xl mx-auto px-4 py-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Understanding the Aim Trainer
+          </h2>
+          
+          <div className="prose prose-blue max-w-none">
+            <p className="text-gray-700 leading-relaxed mb-4">
+              The Aim Trainer is a sophisticated tool designed to enhance your mouse accuracy and targeting precision. This comprehensive training system helps gamers and professionals develop superior hand-eye coordination through targeted exercises. Our Aim Trainer provides detailed performance metrics, allowing users to track their progress and identify areas for improvement.
+            </p>
+            
+            <p className="text-gray-700 leading-relaxed mb-4">
+              When using the Aim Trainer, users engage with randomly appearing targets that challenge their reflexes and precision. The Aim Trainer measures various aspects of performance, including target acquisition speed, click accuracy, and movement consistency. Each session with the Aim Trainer provides valuable data to help users understand their targeting capabilities.
+            </p>
+            
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Professional esports players regularly incorporate the Aim Trainer into their practice routines. The Aim Trainer's effectiveness in improving mouse control makes it an essential tool for competitive gamers. Through consistent practice with the Aim Trainer, users can develop the muscle memory and precision needed for high-level gaming performance.
+            </p>
+            
+            <p className="text-gray-700 leading-relaxed">
+              Whether you're a competitive gamer seeking to enhance your skills or someone looking to improve their mouse accuracy, the Aim Trainer offers a scientific approach to developing targeting abilities. The Aim Trainer's design focuses on both speed and accuracy, making it an effective tool for comprehensive mouse control training.
+            </p>
           </div>
-        )}
-        </div>
-     
-        <div className="container mx-auto py-0 space-y-16 ">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="grid md:grid-cols-2 gap-8 items-center">
-        <div className="w-full h-[400px]">
-          <h2  className="text-xl mb-4 font-semibold">{t("statisticsTitle")}</h2>
-          <Image 
-            src='/aim-statistics.png' 
-            alt='{t("statisticsTitle")}'
-            className='w-full h-full' 
-            width={400} 
-            height={400}
-          />
-        </div>
-        <div className="w-full h-[400px]">
-          <h2  className="text-xl mb-4 font-semibold">{t("aboutTitle")}</h2>
-          <p  dangerouslySetInnerHTML={{ __html: t("about")?.replace(/\n/g, '<br />')  || ''}} >
-                  </p>
-        </div>
-        </div>
-        <EmbedDialog 
-        isOpen={showEmbedDialog}
-        onClose={() => setShowEmbedDialog(false)}
-        embedUrl={embedUrl}
-      />
-        </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="max-w-4xl mx-auto px-4 py-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            FAQ About Aim Trainer
+          </h2>
+          
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                What is a good Aim Trainer score?
+              </h3>
+              <p className="text-gray-700">
+                In Aim Trainer tests, hitting targets within 250-300ms is considered good. Professional gamers often achieve times under 200ms, while average users typically score between 300-400ms per target.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                How can I improve my Aim Trainer performance?
+              </h3>
+              <p className="text-gray-700">
+                Regular practice with the Aim Trainer, maintaining consistent mouse sensitivity, proper posture, and focused training sessions can improve your performance. Many users see improvements with 15-20 minutes of daily practice.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                What factors affect Aim Trainer results?
+              </h3>
+              <p className="text-gray-700">
+                Mouse sensitivity, screen resolution, hand-eye coordination, and physical fatigue all affect Aim Trainer performance. Your setup, including mouse quality and desk ergonomics, also plays a crucial role.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                How often should I use the Aim Trainer?
+              </h3>
+              <p className="text-gray-700">
+                For optimal results, use the Aim Trainer for 15-20 minutes daily. Consistent, shorter practice sessions are more effective than longer, irregular training periods.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Why is Aim Trainer important for gaming?
+              </h3>
+              <p className="text-gray-700">
+                The Aim Trainer is essential for developing precise mouse control, improving reaction times, and building muscle memory. It's particularly valuable for FPS games where accurate targeting is crucial.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        
       </div>
-      
-
-      {/* {gameState === 'playing' && (
-        <div className="absolute top-4 right-4">
-          <p>总点击数: {stats.totalClicks}</p>
-          <p>正确点击: {stats.correctClicks}</p>
-        </div>
-      )} */}
-
-      
     </div>
+    </>
   )
-} 
+}

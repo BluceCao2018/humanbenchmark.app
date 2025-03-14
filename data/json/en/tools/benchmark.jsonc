@@ -1,6 +1,6 @@
 [
     {
-        "name": "Reaction Time",
+        "name": "Reaction Time Test",
         "description": "Test your visual reflexes",
         "url": "/tests/reactiontime",
         "icon":"FaClock",

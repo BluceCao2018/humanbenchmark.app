@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { EmbedDialog } from '@/components/EmbedDialog'
 import { Button } from '@/components/ui/button';
+import staticContent from '../alltoolslist.html'
 
 
 export default function SequenceMemoryTest() {
@@ -177,8 +178,61 @@ export default function SequenceMemoryTest() {
   
   return (
     <>
-      <div className="w-full mx-auto py-0 space-y-16 ">
-        <div className="banner w-full h-[550px] flex flex-col justify-center items-center" style={{ backgroundColor: 'rgb(43, 135, 209)' }}>
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is a good Sequence Memory Test score?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "In the Sequence Memory Test, reaching levels 12-15 is considered good, while achieving levels 16-20 is excellent. Average users typically reach levels 8-11. Professional memory athletes and experienced users can achieve even higher levels."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I improve my sequence memory?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Regular practice with the Sequence Memory Test, developing pattern recognition strategies, and using visualization techniques can improve your performance. Consistent practice combined with proper rest enhances sequence memory capacity."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What factors affect Sequence Memory Test performance?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Concentration level, pattern recognition ability, processing speed, and fatigue affect Sequence Memory Test results. Environmental conditions and overall cognitive state also significantly impact performance."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How often should I practice sequence memory?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "For optimal improvement, practice the Sequence Memory Test for 10-15 minutes daily. Short, focused practice sessions are more effective than longer, irregular sessions. Consistent practice helps develop stronger memory skills."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why is sequence memory important?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sequence memory is crucial for learning patterns, remembering procedures, and developing problem-solving skills. Strong sequence memory enhances performance in various activities, from music and sports to mathematics and programming."
+                }
+              }
+            ]
+          })
+        }}
+      />
+
+      <div className="w-full mx-auto py-0 space-y-16">
+        <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme text-white">
           {!isGameStarted && (
             <div className="flex flex-col justify-center items-center">
               <i className="fas fa-bolt text-9xl text-white mb-8 animate-fade"></i>
@@ -196,15 +250,7 @@ export default function SequenceMemoryTest() {
             >
               {t("clickToStart")}
             </Button>
-            {!isIframe && (
-              <Button
-                className="bg-yellow-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-yellow-700 transition-colors"
-                onClick={() => setShowEmbedDialog(true)}
-              >
-                <i className="fas fa-code mr-2" />
-                {te('button')}
-              </Button>
-            )}
+            
           </div>
         )}
 
@@ -257,33 +303,91 @@ export default function SequenceMemoryTest() {
 
         </div>
      
-        <div className="container mx-auto py-0 space-y-16 ">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="grid md:grid-cols-2 gap-8 items-center">
-        <div className="w-full h-[400px]">
-          <h2  className="text-xl mb-4 font-semibold">{t("statisticsTitle")}</h2>
-          <Image 
-            src='/sequence-statistics.png' 
-            alt='{t("statisticsTitle")}'
-            className='w-full h-full' 
-            width={400} 
-            height={400}
-          />
-        </div>
-        <div className="w-full h-[400px]">
-          <h2  className="text-xl mb-4 font-semibold">{t("aboutTitle")}</h2>
-          <p  dangerouslySetInnerHTML={{ __html: t("about")?.replace(/\n/g, '<br />')  || ''}} >
-                  </p>
-        </div>
-        </div>
+        <div className="container mx-auto py-0 space-y-16">
+
+          {/* 静态内容 */}
+          <div dangerouslySetInnerHTML={{ __html: staticContent }} />
+
+          {/* SEO Content Section */}
+          <section className="max-w-4xl mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Understanding the Sequence Memory Test
+            </h2>
+            
+            <div className="prose prose-blue max-w-none">
+              <p className="text-gray-700 leading-relaxed mb-4">
+                The Sequence Memory Test is an advanced cognitive assessment tool designed to measure your ability to remember and reproduce sequential patterns. This comprehensive test evaluates how well you can recall increasingly complex sequences of visual information. The Sequence Memory Test provides valuable insights into your working memory capacity and pattern recognition abilities.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed mb-4">
+                During the Sequence Memory Test, participants observe and replicate progressively longer sequences of illuminated squares. The Sequence Memory Test increases in difficulty as users successfully complete each level, challenging their ability to maintain and recall longer patterns. Each session provides immediate feedback on performance accuracy.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed mb-4">
+                Regular practice with the Sequence Memory Test can significantly enhance your sequential memory and pattern recognition capabilities. Many professionals and students use the Sequence Memory Test to improve their cognitive abilities and performance in tasks requiring sequential processing. The test's adaptive difficulty ensures consistent challenge and growth.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed">
+                Whether you're a student developing learning skills or a professional seeking to enhance cognitive abilities, the Sequence Memory Test offers a scientific approach to memory improvement. The test's design focuses on both accuracy and complexity, making it an effective tool for comprehensive memory development.
+              </p>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="max-w-4xl mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              FAQ About Sequence Memory Test
+            </h2>
+            
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  What is a good Sequence Memory Test score?
+                </h3>
+                <p className="text-gray-700">
+                  In the Sequence Memory Test, reaching levels 12-15 is considered good, while achieving levels 16-20 is excellent. Average users typically reach levels 8-11. Professional memory athletes and experienced users can achieve even higher levels.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  How can I improve my sequence memory?
+                </h3>
+                <p className="text-gray-700">
+                  Regular practice with the Sequence Memory Test, developing pattern recognition strategies, and using visualization techniques can improve your performance. Consistent practice combined with proper rest enhances sequence memory capacity.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  What factors affect Sequence Memory Test performance?
+                </h3>
+                <p className="text-gray-700">
+                  Concentration level, pattern recognition ability, processing speed, and fatigue affect Sequence Memory Test results. Environmental conditions and overall cognitive state also significantly impact performance.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  How often should I practice sequence memory?
+                </h3>
+                <p className="text-gray-700">
+                  For optimal improvement, practice the Sequence Memory Test for 10-15 minutes daily. Short, focused practice sessions are more effective than longer, irregular sessions. Consistent practice helps develop stronger memory skills.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Why is sequence memory important?
+                </h3>
+                <p className="text-gray-700">
+                  Sequence memory is crucial for learning patterns, remembering procedures, and developing problem-solving skills. Strong sequence memory enhances performance in various activities, from music and sports to mathematics and programming.
+                </p>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
-    </div>
-    <EmbedDialog 
-      isOpen={showEmbedDialog}
-      onClose={() => setShowEmbedDialog(false)}
-      embedUrl={embedUrl}
-    />
     </>
   )
 } 

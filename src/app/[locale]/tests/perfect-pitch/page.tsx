@@ -6,6 +6,7 @@ import { FaMusic, FaPlay, FaCheck, FaTimes } from 'react-icons/fa'
 import { useSearchParams } from 'next/navigation'
 import { EmbedDialog } from '@/components/EmbedDialog'
 import { Button } from '@/components/ui/button'
+import staticContent from '../alltoolslist.html'
 
 const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 const NOTE_FREQUENCIES: { [key: string]: number } = {
@@ -194,124 +195,212 @@ export default function PerfectPitch() {
   const { message, description, icon } = getGameStateMessage()
 
   return (
-    <div className="w-full mx-auto py-0 space-y-16">
-      <div className={`
-        banner w-full h-[550px] flex flex-col justify-center items-center 
-        ${gameState === 'waiting' ? 'bg-blue-theme' : 
-          gameState === 'testing' ? 'bg-purple-500' : 
-          gameState === 'result' ? (score === totalAttempts ? 'bg-green-500' : 'bg-red-500') :
-          'bg-blue-theme'}
-        transition-all duration-300 cursor-pointer user-select-none
-      `} 
-      onClick={gameState === 'waiting' ? handleStart : undefined}>
-        {icon}
-        <h1 className="text-7xl font-bold text-center mb-4 text-white user-select-none">
-          {message}
-        </h1>
-        <p className="text-3xl text-center mb-20 text-white user-select-none">
-          {description}
-        </p>
-        
-        {gameState === 'waiting' && (
-          <div className="mt-4 flex gap-4 items-center">
-            <Button
-              onClick={(e) => {
-                e.stopPropagation()
-                setNotesCount(Math.max(1, notesCount - 1))
-              }}
-              className="px-4 py-2 bg-white text-blue-500 rounded-lg hover:bg-gray-100"
-            >
-              -
-            </Button>
-            <span className="text-white text-xl">
-              {t("notesCount")}: {notesCount}
-            </span>
-            <Button
-              onClick={(e) => {
-                e.stopPropagation()
-                setNotesCount(Math.min(10, notesCount + 1))
-              }}
-              className="px-4 py-2 bg-white text-blue-500 rounded-lg hover:bg-gray-100"
-            >
-              +
-            </Button>
-            {!isIframe && (
-              <Button
-                className="bg-yellow-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-yellow-700 transition-colors"
-                onClick={() => setShowEmbedDialog(true)}
-              >
-                <i className="fas fa-code mr-2" />
-                {te('button')}
-              </Button>
-            )}
-          </div>
-        )}
-        
-        {gameState === 'testing' && (
-          <div className="flex flex-col items-center gap-6">
-            <div className="grid grid-cols-6 gap-2 max-w-4xl">
-              {NOTES.map(note => (
-                <button
-                  key={note}
-                  onClick={() => handleNoteGuess(note)}
-                  className={`px-4 py-2 rounded-lg transition-colors text-sm
-                    ${selectedNotes.includes(note) 
-                      ? 'bg-purple-700 text-white' 
-                      : 'bg-white text-purple-500 hover:bg-gray-100'}`}
-                >
-                  {note}
-                </button>
-              ))}
-            </div>
-            
-            <div className="text-white text-xl text-center">
-              {t("selectedNotes")}: {selectedNotes.join(', ')}
-              <br />
-              {t("remainingNotes")}: {notesCount - selectedNotes.length}
-            </div>
-          </div>
-        )}
-        
-        {gameState === 'result' && (
-          <div className="flex flex-col items-center gap-4">
-            <div className="text-white text-xl space-y-2">
-              <p>{t("yourAnswer")}: {selectedNotes.join(', ')}</p>
-              <p>{t("correctNotes")}: {currentNotes.join(', ')}</p>
-            </div>
-            <button
-              onClick={() => startNewRound()}
-              className="px-8 py-4 bg-white text-purple-500 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              {t("nextNote")}
-            </button>
-          </div>
-        )}
-      </div>
+    <>
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is Perfect Pitch?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Perfect pitch, or absolute pitch, is the ability to identify or reproduce any musical note without a reference tone. It's a rare ability found in about 1 in 10,000 people and is often developed during early musical training."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can Perfect Pitch be learned?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "While perfect pitch is often considered innate, early musical training (before age 3-4) can help develop this ability. Adults can improve their pitch recognition through dedicated practice, though achieving true perfect pitch is rare."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What's the difference between Perfect Pitch and Relative Pitch?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Perfect pitch allows identification of notes without reference, while relative pitch is the ability to identify notes in relation to a known reference note. Relative pitch is more common and can be developed through practice."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why is Perfect Pitch important in music?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Perfect pitch can be advantageous for musicians, helping with tuning instruments, singing in tune, transcribing music, and composing. However, many successful musicians rely on well-developed relative pitch instead."
+                }
+              }
+            ]
+          })
+        }}
+      />
 
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div className="w-full h-[400px]">
-            <h2 className="text-xl mb-4 font-semibold">{t("statisticsTitle")}</h2>
-            {/* <Image 
-              src='/perfect-pitch-statistics.png' 
-              alt='Perfect Pitch Statistics'
-              className='w-full h-full' 
-              width={400} 
-              height={400}
-            /> */}
-          </div>
-          <div className="w-full h-[400px]">
-            <h2 className="text-xl mb-4 font-semibold">{t("aboutTitle")}</h2>
-            <p>{t("about")}</p>
-          </div>
+      <div className="w-full mx-auto py-0 space-y-16">
+        <div className={`
+          banner w-full h-[550px] flex flex-col justify-center items-center 
+          ${gameState === 'waiting' ? 'bg-blue-theme' : 
+            gameState === 'testing' ? 'bg-purple-500' : 
+            gameState === 'result' ? (score === totalAttempts ? 'bg-green-500' : 'bg-red-500') :
+            'bg-blue-theme'}
+          transition-all duration-300 cursor-pointer user-select-none
+        `} 
+        onClick={gameState === 'waiting' ? handleStart : undefined}>
+          {icon}
+          <h1 className="text-7xl font-bold text-center mb-4 text-white user-select-none">
+            {message}
+          </h1>
+          <p className="text-3xl text-center mb-20 text-white user-select-none">
+            {description}
+          </p>
+          
+          {gameState === 'waiting' && (
+            <div className="mt-4 flex gap-4 items-center">
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setNotesCount(Math.max(1, notesCount - 1))
+                }}
+                className="px-4 py-2 bg-white text-blue-500 rounded-lg hover:bg-gray-100"
+              >
+                -
+              </Button>
+              <span className="text-white text-xl">
+                {t("notesCount")}: {notesCount}
+              </span>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setNotesCount(Math.min(10, notesCount + 1))
+                }}
+                className="px-4 py-2 bg-white text-blue-500 rounded-lg hover:bg-gray-100"
+              >
+                +
+              </Button>
+            </div>
+          )}
+          
+          {gameState === 'testing' && (
+            <div className="flex flex-col items-center gap-6">
+              <div className="grid grid-cols-6 gap-2 max-w-4xl">
+                {NOTES.map(note => (
+                  <button
+                    key={note}
+                    onClick={() => handleNoteGuess(note)}
+                    className={`px-4 py-2 rounded-lg transition-colors text-sm
+                      ${selectedNotes.includes(note) 
+                        ? 'bg-purple-700 text-white' 
+                        : 'bg-white text-purple-500 hover:bg-gray-100'}`}
+                  >
+                    {note}
+                  </button>
+                ))}
+              </div>
+              
+              <div className="text-white text-xl text-center">
+                {t("selectedNotes")}: {selectedNotes.join(', ')}
+                <br />
+                {t("remainingNotes")}: {notesCount - selectedNotes.length}
+              </div>
+            </div>
+          )}
+          
+          {gameState === 'result' && (
+            <div className="flex flex-col items-center gap-4">
+              <div className="text-white text-xl space-y-2">
+                <p>{t("yourAnswer")}: {selectedNotes.join(', ')}</p>
+                <p>{t("correctNotes")}: {currentNotes.join(', ')}</p>
+              </div>
+              <button
+                onClick={() => startNewRound()}
+                className="px-8 py-4 bg-white text-purple-500 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                {t("nextNote")}
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          
         </div>
       </div>
+      
+      {/* 静态内容 */}
+      <div dangerouslySetInnerHTML={{ __html: staticContent }} />
 
-      <EmbedDialog 
-        isOpen={showEmbedDialog}
-        onClose={() => setShowEmbedDialog(false)}
-        embedUrl={embedUrl}
-      />
-    </div>
+      {/* SEO Content Section */}
+      <section className="max-w-4xl mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Understanding Perfect Pitch Testing
+        </h2>
+        
+        <div className="prose prose-blue max-w-none">
+          <p className="text-gray-700 leading-relaxed mb-4">
+            Perfect pitch testing evaluates your ability to identify musical notes without any reference tone. This rare and fascinating ability, also known as absolute pitch, is found in approximately 1 in 10,000 people and is often associated with early musical training.
+          </p>
+          
+          <p className="text-gray-700 leading-relaxed mb-4">
+            The test challenges participants to identify specific musical notes played in isolation, providing insights into their pitch recognition abilities. While perfect pitch is often considered an innate talent, various degrees of pitch recognition can be developed through practice.
+          </p>
+          
+          <p className="text-gray-700 leading-relaxed">
+            Whether you're a musician interested in assessing your pitch perception or simply curious about your musical abilities, this test offers a structured way to evaluate your pitch recognition capabilities.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="max-w-4xl mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Frequently Asked Questions About Perfect Pitch
+        </h2>
+        
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              What is Perfect Pitch?
+            </h3>
+            <p className="text-gray-700">
+              Perfect pitch, or absolute pitch, is the ability to identify or reproduce any musical note without a reference tone. It's a rare ability found in about 1 in 10,000 people and is often developed during early musical training.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Can Perfect Pitch be learned?
+            </h3>
+            <p className="text-gray-700">
+              While perfect pitch is often considered innate, early musical training (before age 3-4) can help develop this ability. Adults can improve their pitch recognition through dedicated practice, though achieving true perfect pitch is rare.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              What's the difference between Perfect Pitch and Relative Pitch?
+            </h3>
+            <p className="text-gray-700">
+              Perfect pitch allows identification of notes without reference, while relative pitch is the ability to identify notes in relation to a known reference note. Relative pitch is more common and can be developed through practice.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Why is Perfect Pitch important in music?
+            </h3>
+            <p className="text-gray-700">
+              Perfect pitch can be advantageous for musicians, helping with tuning instruments, singing in tune, transcribing music, and composing. However, many successful musicians rely on well-developed relative pitch instead.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      
+    </>
   )
 } 

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation'
 import { EmbedDialog } from '@/components/EmbedDialog'
 import { Button } from '@/components/ui/button';
+import staticContent from '../alltoolslist.html'
 
 export default function ColorBlindnessTest() {
   const [isGameStarted, setIsGameStarted] = useState(false)
@@ -217,109 +218,201 @@ export default function ColorBlindnessTest() {
   }, [isIframe, isComplete, score])
 
   return (
-    <div className="w-full mx-auto py-0 space-y-16">
-      <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme text-white">
-        {!isGameStarted && (
-          <div className="flex flex-col justify-center items-center">
-            <FaEye className="text-9xl mb-8 animate-fade" />
-            <h1 className="text-4xl font-bold text-center mb-4">{t("h2")}</h1>
-            <p className="text-lg text-center mb-20">{t("description")}</p>
-          </div>
-        )}
+    <>
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What are the different types of color blindness?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The main types are Deuteranopia (red-green), Protanopia (red-green), Tritanopia (blue-yellow), and Achromatopsia (complete color blindness). Red-green color blindness is the most common form."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How accurate are online color blindness tests?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Online color blindness tests can provide a good initial screening, but they should not replace professional medical examination. Factors like screen calibration and lighting can affect online test results."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can color blindness be cured?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Currently, there is no cure for color blindness. However, special glasses and contact lenses can help some people better distinguish colors. Gene therapy research shows promising results for future treatment."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How common is color blindness?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Color blindness affects approximately 8% of males and 0.5% of females worldwide. The condition is usually inherited, though it can also result from eye injuries or certain diseases."
+                }
+              }
+            ]
+          })
+        }}
+      />
 
-        <div className="flex flex-col justify-center items-center">
-          {!isGameStarted ? (
-            <div className="flex gap-4">
-            <Button 
-              onClick={() => setIsGameStarted(true)}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
-            >
-              {t("clickToStart")}
-            </Button>
-            {!isIframe && (
-              <Button
-                className="bg-yellow-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-yellow-700 transition-colors"
-                onClick={() => setShowEmbedDialog(true)}
-              >
-                 <i className="fas fa-code mr-2" />
-                {te('button')}
-              </Button>
-            )}
-            </div>
-          ) : (
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              {!isComplete ? (
-                <>
-                  <div className="mb-4">
-                    <span className="text-xl font-bold text-gray-800">
-                      {t("question")} {currentQuestion + 1}/{questions.length}
-                    </span>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <Image
-                      src={questions[currentQuestion].image}
-                      alt="Color blindness test"
-                      width={480}
-                      height={480}
-                      className="mx-auto rounded-lg"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    {questions[currentQuestion].options.map((option) => (
-                      <button
-                        key={option}
-                        onClick={() => handleAnswer(option, questions[currentQuestion].type)}
-                        className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition-colors"
-                      >
-                        {getOptionDisplay(option, questions[currentQuestion].type)}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <div className="mt-4">
-                  <p className="text-xl mb-4 text-gray-800">
-                    {t("finalScore")}: {score}/{questions.length}
-                  </p>
-                  <p className="text-lg mb-4 text-gray-600">
-                    {getResult(score)}
-                  </p>
-                  <button 
-                    onClick={restart}
-                    className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors"
-                  >
-                    {t("tryAgain")}
-                  </button>
-                </div>
-              )}
+      <div className="w-full mx-auto py-0 space-y-16">
+        <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme text-white">
+          {!isGameStarted && (
+            <div className="flex flex-col justify-center items-center">
+              <FaEye className="text-9xl mb-8 animate-fade" />
+              <h1 className="text-4xl font-bold text-center mb-4">{t("h2")}</h1>
+              <p className="text-lg text-center mb-20">{t("description")}</p>
             </div>
           )}
-        </div>
-      </div>
 
-      <div className="container mx-auto py-0 space-y-16">
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="w-full h-[400px]">
-              <h2 className="text-xl mb-4 font-semibold text-gray-800">{t("statisticsTitle")}</h2>
-            </div>
-            <div className="w-full h-[400px]">
-              <h2 className="text-xl mb-4 font-semibold text-gray-800">{t("aboutTitle")}</h2>
-              <p className="text-gray-600" 
-                 dangerouslySetInnerHTML={{ __html: t("about")?.replace(/\n/g, '<br />') || '' }}>
-              </p>
-            </div>
+          <div className="flex flex-col justify-center items-center">
+            {!isGameStarted ? (
+              <div className="flex gap-4">
+              <Button 
+                onClick={() => setIsGameStarted(true)}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+              >
+                {t("clickToStart")}
+              </Button>
+              </div>
+            ) : (
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                {!isComplete ? (
+                  <>
+                    <div className="mb-4">
+                      <span className="text-xl font-bold text-gray-800">
+                        {t("question")} {currentQuestion + 1}/{questions.length}
+                      </span>
+                    </div>
+                    
+                    <div className="mb-6">
+                      <Image
+                        src={questions[currentQuestion].image}
+                        alt="Color blindness test"
+                        width={480}
+                        height={480}
+                        className="mx-auto rounded-lg"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      {questions[currentQuestion].options.map((option) => (
+                        <button
+                          key={option}
+                          onClick={() => handleAnswer(option, questions[currentQuestion].type)}
+                          className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg transition-colors"
+                        >
+                          {getOptionDisplay(option, questions[currentQuestion].type)}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="mt-4">
+                    <p className="text-xl mb-4 text-gray-800">
+                      {t("finalScore")}: {score}/{questions.length}
+                    </p>
+                    <p className="text-lg mb-4 text-gray-600">
+                      {getResult(score)}
+                    </p>
+                    <button 
+                      onClick={restart}
+                      className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors"
+                    >
+                      {t("tryAgain")}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
+
+        <div className="container mx-auto py-0 space-y-16">
+          
+        </div>
       </div>
 
-      <EmbedDialog 
-        isOpen={showEmbedDialog}
-        onClose={() => setShowEmbedDialog(false)}
-        embedUrl={embedUrl}
-      />
-    </div>
+      {/* 静态内容 */}
+      <div dangerouslySetInnerHTML={{ __html: staticContent }} />
+      
+      {/* SEO Content Section */}
+      <section className="max-w-4xl mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Understanding Color Blindness Testing
+        </h2>
+        
+        <div className="prose prose-blue max-w-none">
+          <p className="text-gray-700 leading-relaxed mb-4">
+            Color blindness testing helps identify various types of color vision deficiencies that affect how people perceive different colors. These tests use specially designed patterns and images to evaluate how well you can distinguish between different colors and shades.
+          </p>
+          
+          <p className="text-gray-700 leading-relaxed mb-4">
+            The most common form of color blindness affects red and green color perception, while less common types impact blue and yellow colors or result in complete color blindness. Early detection through testing can help individuals adapt their lifestyle and work environment to accommodate their color vision needs.
+          </p>
+          
+          <p className="text-gray-700 leading-relaxed">
+            Whether for career requirements, educational purposes, or personal awareness, color blindness testing provides valuable information about your color vision capabilities and can help identify potential challenges in daily activities.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="max-w-4xl mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Frequently Asked Questions About Color Blindness
+        </h2>
+        
+        <div className="space-y-6">
+          {/* Add FAQ items matching the schema above */}
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              What are the different types of color blindness?
+            </h3>
+            <p className="text-gray-700">
+              The main types are Deuteranopia (red-green), Protanopia (red-green), Tritanopia (blue-yellow), and Achromatopsia (complete color blindness). Red-green color blindness is the most common form.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              How accurate are online color blindness tests?
+            </h3>
+            <p className="text-gray-700">
+              Online color blindness tests can provide a good initial screening, but they should not replace professional medical examination. Factors like screen calibration and lighting can affect online test results.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Can color blindness be cured?
+            </h3>
+            <p className="text-gray-700">
+              Currently, there is no cure for color blindness. However, special glasses and contact lenses can help some people better distinguish colors. Gene therapy research shows promising results for future treatment.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              How common is color blindness?
+            </h3>
+            <p className="text-gray-700">
+              Color blindness affects approximately 8% of males and 0.5% of females worldwide. The condition is usually inherited, though it can also result from eye injuries or certain diseases.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      
+    </>
   )
 } 

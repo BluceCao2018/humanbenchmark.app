@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { EmbedDialog } from '@/components/EmbedDialog'
 import { Button } from '@/components/ui/button';
+import staticContent from '../alltoolslist.html'
 
 export default function VerbalMemoryTest() {
   const [gameState, setGameState] = useState<'start' | 'playing' | 'result'>('start')
@@ -115,101 +116,206 @@ export default function VerbalMemoryTest() {
   }
 
   return (
-    <div 
-      className="w-full mx-auto py-0 space-y-16 "
-    >
-    <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme text-white">
-      {gameState === 'start' && (
-        <div  className='flex flex-col justify-center items-center'>
-          <i className="fas fa-language text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
-          <h1 className="text-4xl font-bold text-center mb-4 text-white">{t("h2")}</h1>
-          <p className="text-lg text-center mb-20 text-white" dangerouslySetInnerHTML={{ __html: t("description")?.replace(/\n/g, '<br />')  || ''}} ></p>
-          <div className="flex gap-4 justify-center items-center">
-          <Button 
-            onClick={startGame} 
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
-          >
-            {t("clickToStart")}
-          </Button>
-          {!isIframe && (
-            <Button
-              className="bg-yellow-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-yellow-700 transition-colors"
-              onClick={() => setShowEmbedDialog(true)}
-            >
-              <i className="fas fa-code mr-2" />
-              {te('button')}
-            </Button>
+    <>
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is a good Verbal Memory Test score?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "In the Verbal Memory Test, remembering 50-70 words is considered good, while scores above 80 words are excellent. Average users typically remember 30-50 words before making three mistakes. Professional memory athletes can achieve significantly higher scores."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I improve my verbal memory?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Regular practice with the Verbal Memory Test, using visualization techniques, creating word associations, and active reading can improve your performance. Daily practice sessions combined with adequate sleep help strengthen verbal memory capacity."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What factors affect Verbal Memory Test performance?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Several factors influence Verbal Memory Test results, including vocabulary size, language proficiency, attention span, and fatigue level. Environmental conditions and time of day can also impact performance significantly."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How often should I practice verbal memory?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "For optimal results, practice the Verbal Memory Test for 10-15 minutes daily. Consistent, shorter practice sessions are more effective than longer, irregular training periods. Regular practice helps build long-term memory capacity."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why is verbal memory important?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Verbal memory is crucial for learning new languages, vocabulary acquisition, and academic success. Strong verbal memory enhances communication skills, reading comprehension, and overall cognitive performance in daily activities."
+                }
+              }
+            ]
+          })
+        }}
+      />
+
+      <div className="w-full mx-auto py-0 space-y-16">
+        <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme text-white">
+          {gameState === 'start' && (
+            <div  className='flex flex-col justify-center items-center'>
+              <i className="fas fa-language text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
+              <h1 className="text-4xl font-bold text-center mb-4 text-white">{t("h2")}</h1>
+              <p className="text-lg text-center mb-20 text-white" dangerouslySetInnerHTML={{ __html: t("description")?.replace(/\n/g, '<br />')  || ''}} ></p>
+              <div className="flex gap-4 justify-center items-center">
+              <Button 
+                onClick={startGame} 
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+              >
+                {t("clickToStart")}
+              </Button>
+              </div>
+            </div>
           )}
-          </div>
+
+          {gameState === 'playing' && (
+            <div className="flex flex-col items-center">
+              <p className="text-4xl font-bold mb-12">{currentWord}</p>
+              <div className="flex space-x-4">
+                <button 
+                  onClick={() => handleResponse('new')}
+                  className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-700 transition-colors"
+                >
+                  {t("new")}
+                </button>
+                <button 
+                  onClick={() => handleResponse('seen')}
+                  className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition-colors"
+                >
+                  {t("seen")}
+                </button>
+              </div>
+              <div className="absolute top-4 right-4">
+                <p>分数: {score}</p>
+              </div>
+            </div>
+          )}
+
+          {gameState === 'result' && (
+            <div  className='flex flex-col justify-center items-center'>
+              <i className="fas fa-language text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
+              <h2 className="text-2xl font-bold mb-4">{t("h2")}</h2>
+              <p className="text-6xl mb-4">{score} words</p>
+              <button 
+                onClick={() => setGameState('start')}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+              >
+                {t("tryAgain")}
+              </button>
+            </div>
+          )}
         </div>
-      )}
 
-      {gameState === 'playing' && (
-        <div className="flex flex-col items-center">
-          <p className="text-4xl font-bold mb-12">{currentWord}</p>
-          <div className="flex space-x-4">
-            <button 
-              onClick={() => handleResponse('new')}
-              className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-700 transition-colors"
-            >
-              {t("new")}
-            </button>
-            <button 
-              onClick={() => handleResponse('seen')}
-              className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition-colors"
-            >
-              {t("seen")}
-            </button>
-          </div>
-          <div className="absolute top-4 right-4">
-            <p>分数: {score}</p>
-          </div>
+        <div className="container mx-auto py-0 space-y-16">
+           {/* 静态内容 */}
+           <div dangerouslySetInnerHTML={{ __html: staticContent }} />
+
+          {/* SEO Content Section */}
+          <section className="max-w-4xl mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Understanding the Verbal Memory Test
+            </h2>
+            
+            <div className="prose prose-blue max-w-none">
+              <p className="text-gray-700 leading-relaxed mb-4">
+                The Verbal Memory Test is an advanced cognitive assessment tool designed to measure your word recognition and retention abilities. This comprehensive test evaluates how well you can identify and remember previously seen words among new ones. The Verbal Memory Test provides valuable insights into your verbal working memory capacity and helps track improvements over time.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed mb-4">
+                During the Verbal Memory Test, participants encounter a series of words and must identify whether each word is new or has appeared before. The Verbal Memory Test continues until three mistakes are made, allowing for an accurate assessment of verbal memory capacity. Each session provides immediate feedback, helping users understand their performance level.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed mb-4">
+                Regular engagement with the Verbal Memory Test can significantly enhance your word recognition abilities. Many students and professionals use the Verbal Memory Test to improve their vocabulary retention and language learning capabilities. The test's progressive nature ensures that users are consistently challenged as their skills improve.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed">
+                Whether you're learning a new language or seeking to enhance your cognitive abilities, the Verbal Memory Test offers a scientific approach to memory improvement. The test's design focuses on both recognition accuracy and memory capacity, making it an effective tool for comprehensive verbal memory development.
+              </p>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="max-w-4xl mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              FAQ About Verbal Memory Test
+            </h2>
+            
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  What is a good Verbal Memory Test score?
+                </h3>
+                <p className="text-gray-700">
+                  In the Verbal Memory Test, remembering 50-70 words is considered good, while scores above 80 words are excellent. Average users typically remember 30-50 words before making three mistakes. Professional memory athletes can achieve significantly higher scores.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  How can I improve my verbal memory?
+                </h3>
+                <p className="text-gray-700">
+                  Regular practice with the Verbal Memory Test, using visualization techniques, creating word associations, and active reading can improve your performance. Daily practice sessions combined with adequate sleep help strengthen verbal memory capacity.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  What factors affect Verbal Memory Test performance?
+                </h3>
+                <p className="text-gray-700">
+                  Several factors influence Verbal Memory Test results, including vocabulary size, language proficiency, attention span, and fatigue level. Environmental conditions and time of day can also impact performance significantly.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  How often should I practice verbal memory?
+                </h3>
+                <p className="text-gray-700">
+                  For optimal results, practice the Verbal Memory Test for 10-15 minutes daily. Consistent, shorter practice sessions are more effective than longer, irregular training periods. Regular practice helps build long-term memory capacity.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Why is verbal memory important?
+                </h3>
+                <p className="text-gray-700">
+                  Verbal memory is crucial for learning new languages, vocabulary acquisition, and academic success. Strong verbal memory enhances communication skills, reading comprehension, and overall cognitive performance in daily activities.
+                </p>
+              </div>
+            </div>
+          </section>
+
+         
         </div>
-      )}
+      </div>
 
-      {gameState === 'result' && (
-        <div  className='flex flex-col justify-center items-center'>
-          <i className="fas fa-language text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
-          <h2 className="text-2xl font-bold mb-4">{t("h2")}</h2>
-          <p className="text-6xl mb-4">{score} words</p>
-          <button 
-            onClick={() => setGameState('start')}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
-          >
-            {t("tryAgain")}
-          </button>
-        </div>
-      )}
-    </div>
-
-    <div className="container mx-auto py-0 space-y-16 ">
-<div className="container mx-auto px-4 py-8 max-w-6xl">
-<div className="grid md:grid-cols-2 gap-8 items-center">
-  <div className="w-full h-[400px]">
-    <h2  className="text-xl mb-4 font-semibold">{t("statisticsTitle")}</h2>
-    <Image 
-      src='/verbal-memory-statistics.png' 
-      alt='{t("statisticsTitle")}'
-      className='w-full h-full' 
-      width={400} 
-      height={400}
-    />
-  </div>
-  <div className="w-full h-[400px]">
-    <h2  className="text-xl mb-4 font-semibold">{t("aboutTitle")}</h2>
-    <p  dangerouslySetInnerHTML={{ __html: t("about")?.replace(/\n/g, '<br />')  || ''}} >
-            </p>
-  </div>
-  </div>
-  </div>
-</div>
-
-    <EmbedDialog 
-      isOpen={showEmbedDialog}
-      onClose={() => setShowEmbedDialog(false)}
-      embedUrl={embedUrl}
-    />
-
-    </div>
+      <div className="container mx-auto py-0 space-y-16 ">
+        
+      </div>
+    </>
   )
 } 

@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { EmbedDialog } from '@/components/EmbedDialog'
 import { Button } from '@/components/ui/button';
+import staticContent from '../alltoolslist.html'
 
 export default function NumberMemoryTest() {
   const [gameState, setGameState] = useState<'start' | 'show' | 'input' | 'result'>('start')
@@ -127,126 +128,227 @@ export default function NumberMemoryTest() {
   }, [gameState, level, baseTime, timePerDigit])
 
   return (
+    <>
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is a good Number Memory Test score?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "In the Number Memory Test, remembering 7-8 digits is considered average, while 9-11 digits is good. Some individuals can remember 12 or more digits, which is exceptional. Professional memory athletes can achieve even higher scores."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I improve my number memory?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Regular practice with the Number Memory Test, using memory techniques like chunking, visualization, and creating number patterns can improve your performance. Daily practice and adequate rest are also essential for better memory retention."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What factors affect Number Memory Test performance?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Concentration level, fatigue, stress, and practice frequency affect Number Memory Test results. Environmental factors like distractions and time of day can also impact performance. Mental state and overall cognitive health play crucial roles."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How often should I practice number memory?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "For optimal improvement, practice the Number Memory Test for 10-15 minutes daily. Short, focused practice sessions are more effective than longer, irregular sessions. Consistency is key to developing better memory skills."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why is number memory important?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Number memory is essential for daily tasks like remembering phone numbers, passwords, and dates. Strong number memory also indicates good working memory capacity, which is crucial for learning, problem-solving, and cognitive performance."
+                }
+              }
+            ]
+          })
+        }}
+      />
 
-    <div 
-      className="w-full mx-auto py-0 space-y-16 "
-    >
-    <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme text-white">
-      {gameState === 'start' && (
-        <div  className='flex flex-col justify-center items-center'>
-          <i className="fas fa-th text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
-          <h1 className="text-4xl font-bold text-center mb-4 text-white">{t("h2")}</h1>
-            <p className="text-lg text-center mb-20 text-white" dangerouslySetInnerHTML={{ __html: t("description")?.replace(/\n/g, '<br />')  || ''}} ></p>
-          
-          <div className="flex gap-4 justify-center items-center">
-          <Button 
-            onClick={startGame} 
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
-          >
-            {t("clickToStart")}
-          </Button>
-          {!isIframe && (
-            <Button
-              className="bg-yellow-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-yellow-700 transition-colors"
-              onClick={() => setShowEmbedDialog(true)}
-            >
-              <i className="fas fa-code mr-2" />
-              {te('button')}
-            </Button>
+      <div className="w-full mx-auto py-0 space-y-16">
+        <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme text-white">
+          {gameState === 'start' && (
+            <div  className='flex flex-col justify-center items-center'>
+              <i className="fas fa-th text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
+              <h1 className="text-4xl font-bold text-center mb-4 text-white">{t("h2")}</h1>
+                <p className="text-lg text-center mb-20 text-white" dangerouslySetInnerHTML={{ __html: t("description")?.replace(/\n/g, '<br />')  || ''}} ></p>
+              
+              <div className="flex gap-4 justify-center items-center">
+              <Button 
+                onClick={startGame} 
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+              >
+                {t("clickToStart")}
+              </Button>
+              </div>
+            </div>
           )}
-          </div>
+
+          {gameState === 'show' && (
+            <div className="flex flex-col items-center">
+              <div className="text-6xl font-bold mb-4">
+                {currentNumber}
+              </div>
+              <div className="w-full max-w-[400px] h-2 bg-white/0 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-white"
+                  style={{ 
+                    width: `${progress}%`,
+                    transition: 'width 10ms linear'
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {gameState === 'input' && (
+            <form onSubmit={handleSubmit} className="flex flex-col items-center">
+              <i className="fas fa-th text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
+              <h1 className="text-4xl font-bold text-center mb-4 text-white">{t("remaindTitle")}</h1>
+              <p className="text-lg text-center mb-4 text-white" dangerouslySetInnerHTML={{ __html: t("remaindDescription")?.replace(/\n/g, '<br />')  || ''}} ></p>
+              <input 
+                type="text" 
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                className="text-4xl text-center border-2 border-blue-500 rounded-lg p-2 mb-4 text-black"
+                autoFocus
+                placeholder=""
+              />
+              <button 
+                type="submit" 
+                className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-700 transition-colors"
+              >
+                {t("submit")}
+              </button>
+            </form>
+          )}
+
+          {gameState === 'result' && (
+            <div   className='flex flex-col justify-center items-center'>
+              <h2 className="text-2xl mb-4">{t("number")}</h2>
+              
+              <p className="text-3xl font-bold mb-6">{currentNumber}</p>
+              <h2 className="text-2xl mb-4">{t("youAnswer")}</h2>
+              <p className="text-3xl font-bold mb-4 line-through text-red">{userInput}</p>
+              <h2  className="text-7xl font-bold mb-6">{t("level")} {level}</h2>
+              <button 
+                onClick={() => {
+                  setGameState('start')
+                  setLevel(1)
+                }}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+              >
+                {t("tryAgain")}
+              </button>
+            </div>
+          )}
         </div>
-      )}
 
-      {gameState === 'show' && (
-        <div className="flex flex-col items-center">
-          <div className="text-6xl font-bold mb-4">
-            {currentNumber}
-          </div>
-          <div className="w-full max-w-[400px] h-2 bg-white/0 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-white"
-              style={{ 
-                width: `${progress}%`,
-                transition: 'width 10ms linear'
-              }}
-            />
-          </div>
-        </div>
-      )}
+        <div className="container mx-auto py-0 space-y-16">
+         
 
-      {gameState === 'input' && (
-        <form onSubmit={handleSubmit} className="flex flex-col items-center">
-          <i className="fas fa-th text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
-          <h1 className="text-4xl font-bold text-center mb-4 text-white">{t("remaindTitle")}</h1>
-          <p className="text-lg text-center mb-4 text-white" dangerouslySetInnerHTML={{ __html: t("remaindDescription")?.replace(/\n/g, '<br />')  || ''}} ></p>
-          <input 
-            type="text" 
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            className="text-4xl text-center border-2 border-blue-500 rounded-lg p-2 mb-4 text-black"
-            autoFocus
-            placeholder=""
-          />
-          <button 
-            type="submit" 
-            className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-700 transition-colors"
-          >
-            {t("submit")}
-          </button>
-        </form>
-      )}
+          {/* 静态内容 */}
+          <div dangerouslySetInnerHTML={{ __html: staticContent }} />
 
-      {gameState === 'result' && (
-        <div   className='flex flex-col justify-center items-center'>
-          <h2 className="text-2xl mb-4">{t("number")}</h2>
+          {/* SEO Content Section */}
+          <section className="max-w-4xl mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Understanding the Number Memory Test
+            </h2>
+            
+            <div className="prose prose-blue max-w-none">
+              <p className="text-gray-700 leading-relaxed mb-4">
+                The Number Memory Test is a sophisticated cognitive assessment tool designed to measure your numerical memory capacity and recall abilities. This comprehensive test challenges users to remember increasingly longer sequences of numbers, providing valuable insights into working memory performance. The Number Memory Test helps users understand and improve their memory capabilities through systematic practice.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed mb-4">
+                During the Number Memory Test, participants are presented with number sequences of increasing length. The test begins with shorter sequences and progressively increases difficulty as users demonstrate successful recall. Each Number Memory Test session provides immediate feedback on performance, allowing users to track their progress and identify areas for improvement.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed mb-4">
+                Regular practice with the Number Memory Test can significantly enhance your memory capacity. Many professionals and students use the Number Memory Test to strengthen their cognitive abilities and improve their performance in tasks requiring numerical recall. The test's adaptive difficulty ensures that users are consistently challenged at their skill level.
+              </p>
+              
+              <p className="text-gray-700 leading-relaxed">
+                Whether you're a student looking to enhance your learning capabilities or a professional seeking to improve your memory skills, the Number Memory Test offers a scientific approach to memory training. The test's design focuses on both accuracy and capacity, making it an effective tool for comprehensive memory development.
+              </p>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="max-w-4xl mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              FAQ About Number Memory Test
+            </h2>
+            
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  What is a good Number Memory Test score?
+                </h3>
+                <p className="text-gray-700">
+                  In the Number Memory Test, remembering 7-8 digits is considered average, while 9-11 digits is good. Some individuals can remember 12 or more digits, which is exceptional. Professional memory athletes can achieve even higher scores.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  How can I improve my number memory?
+                </h3>
+                <p className="text-gray-700">
+                  Regular practice with the Number Memory Test, using memory techniques like chunking, visualization, and creating number patterns can improve your performance. Daily practice and adequate rest are also essential for better memory retention.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  What factors affect Number Memory Test performance?
+                </h3>
+                <p className="text-gray-700">
+                  Concentration level, fatigue, stress, and practice frequency affect Number Memory Test results. Environmental factors like distractions and time of day can also impact performance. Mental state and overall cognitive health play crucial roles.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  How often should I practice number memory?
+                </h3>
+                <p className="text-gray-700">
+                  For optimal improvement, practice the Number Memory Test for 10-15 minutes daily. Short, focused practice sessions are more effective than longer, irregular sessions. Consistency is key to developing better memory skills.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Why is number memory important?
+                </h3>
+                <p className="text-gray-700">
+                  Number memory is essential for daily tasks like remembering phone numbers, passwords, and dates. Strong number memory also indicates good working memory capacity, which is crucial for learning, problem-solving, and cognitive performance.
+                </p>
+              </div>
+            </div>
+          </section>
+
           
-          <p className="text-3xl font-bold mb-6">{currentNumber}</p>
-          <h2 className="text-2xl mb-4">{t("youAnswer")}</h2>
-          <p className="text-3xl font-bold mb-4 line-through text-red">{userInput}</p>
-          <h2  className="text-7xl font-bold mb-6">{t("level")} {level}</h2>
-          <button 
-            onClick={() => {
-              setGameState('start')
-              setLevel(1)
-            }}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
-          >
-            {t("tryAgain")}
-          </button>
         </div>
-      )}
-    </div>
-
-<div className="container mx-auto py-0 space-y-16 ">
-<div className="container mx-auto px-4 py-8 max-w-6xl">
-<div className="grid md:grid-cols-2 gap-8 items-center">
-  <div className="w-full h-[400px]">
-    <h2  className="text-xl mb-4 font-semibold">{t("statisticsTitle")}</h2>
-    <Image 
-      src='/number-memory-statistics.png' 
-      alt='{t("statisticsTitle")}'
-      className='w-full h-full' 
-      width={400} 
-      height={400}
-    />
-  </div>
-  <div className="w-full h-[400px]">
-    <h2  className="text-xl mb-4 font-semibold">{t("aboutTitle")}</h2>
-    <p  dangerouslySetInnerHTML={{ __html: t("about")?.replace(/\n/g, '<br />')  || ''}} >
-            </p>
-  </div>
-  </div>
-  </div>
-</div>
-
-<EmbedDialog 
-  isOpen={showEmbedDialog}
-  onClose={() => setShowEmbedDialog(false)}
-  embedUrl={embedUrl}
-/>
-
-</div>
-
+      </div>
+    </>
   )
 } 
