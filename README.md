@@ -1,14 +1,14 @@
-# Fun Benchmark
+# Human Benchmark
 
-[![Fun Benchmark](https://humanbenchmark.app/tests/images/logo.png)](https://humanbenchmark.app)
+[![Human Benchmark](https://humanbenchmark.app/tests/images/logo.png)](https://humanbenchmark.app)
 
-Fun Benchmark is a comprehensive platform offering various cognitive tests and brain games to help you measure and improve different aspects of your abilities.
+Human Benchmark is a comprehensive platform offering various cognitive tests and brain games to help you measure and improve different aspects of your abilities.
 
 ## 🎯 Features
 
 ### Reaction & Speed Tests
-- [Reaction Time Test](https://humanbenchmark.app/tests/reaction-time) - Test your visual reflexes
-- [Audio Reaction Time](https://humanbenchmark.app/tests/audio-reaction) - Measure your response to audio stimuli
+- [Reaction Time Test](https://humanbenchmark.app/tests/reactiontime) - Test your visual reflexes
+- [Audio Reaction Time](https://humanbenchmark.app/tests/audio-reaction-time) - Measure your response to audio stimuli
 - [Aim Trainer](https://humanbenchmark.app/tests/aim) - Test your targeting speed and accuracy
 - [Typing Test](https://humanbenchmark.app/tests/typing) - Measure your typing speed and accuracy
 
@@ -20,19 +20,19 @@ Fun Benchmark is a comprehensive platform offering various cognitive tests and b
 - [Chimp Test](https://humanbenchmark.app/tests/chimp) - Challenge yourself against chimpanzee memory capabilities
 
 ### Perception Tests
-- [Color Perception](https://humanbenchmark.app/tests/color-perception) - Test your ability to distinguish colors
-- [Color Blindness](https://humanbenchmark.app/tests/color-blindness) - Ishihara-style color vision test
-- [Shades of Gray](https://humanbenchmark.app/tests/gray-shades) - Test your grayscale discrimination
-- [51 Shades of Gray](https://humanbenchmark.app/tests/fifty-one-gray-shades) - Advanced grayscale perception challenge
-- [Time Perception](https://humanbenchmark.app/tests/time-perception) - Test your time estimation abilities
+- [Color Perception](https://humanbenchmark.app/tests/color-perception-test) - Test your ability to distinguish colors
+- [Color Blindness](https://humanbenchmark.app/tests/color-blindness-test) - Ishihara-style color vision test
+- [Shades of Gray](https://humanbenchmark.app/tests/gray-shades-test) - Test your grayscale discrimination
+- [51 Shades of Gray](https://humanbenchmark.app/tests/51-gray-shades-test) - Advanced grayscale perception challenge
+- [Time Perception](https://humanbenchmark.app/tests/time-perception-test) - Test your time estimation abilities
 
 ### Auditory Tests
-- [Hearing Frequency Range](https://humanbenchmark.app/tests/hearing-test) - Test your hearing range (20Hz-20,000Hz)
-- [Perfect Pitch Test](https://humanbenchmark.app/tests/perfect-pitch) - Measure your musical note recognition
-- [Audio Reaction Time](https://humanbenchmark.app/tests/audio-reaction) - Test your response to sound
+- [Hearing Frequency Range](https://humanbenchmark.app/tests/hearing-frequency-test) - Test your hearing range (20Hz-20,000Hz)
+- [Perfect Pitch Test](https://humanbenchmark.app/tests/perfect-pitch-) - Measure your musical note recognition
+- [Audio Reaction Time](https://humanbenchmark.app/tests/audio-reaction-time) - Test your response to sound
 
 ### Visual Recognition
-- [Face Recognition Test](https://humanbenchmark.app/tests/face-recognition) - Test your ability to remember and recognize faces
+- [Face Recognition Test](https://humanbenchmark.app/tests/face-recognition-test) - Test your ability to remember and recognize faces
 
 ## 🌐 Try It Out
 
@@ -40,7 +40,7 @@ Visit [https://humanbenchmark.app](https://humanbenchmark.app) to start testing 
 
 ## 🎯 Purpose
 
-Fun Benchmark aims to provide:
+Human Benchmark aims to provide:
 - Accurate measurements of various cognitive abilities
 - Engaging ways to test and improve your skills
 - Comparative statistics to track your progress
@@ -79,16 +79,16 @@ The Human Benchmark test suite at [humanbenchmark.app](https://humanbenchmark.ap
 - [Verbal Memory](https://humanbenchmark.app/tests/verbal-memory) - Keep as many words in short term memory as possible
 - [Chimp Test](https://humanbenchmark.app/tests/chimp) - Are you smater than a chimpanzee?
 - [Typing Test](https://humanbenchmark.app/tests/typing) - How many words per minute can you type?
-- [Time Perception](https://humanbenchmark.app/tests/time-perception) - Test your time perception ability
+- [Time Perception](https://humanbenchmark.app/tests/time-perception-test) - Test your time perception ability
 
 ### Visual Tests
-- [Color Perception](https://humanbenchmark.app/tests/color-perception) - Test your color perception ability
-- [Shades of Gray](https://humanbenchmark.app/tests/shades-of-gray) - Test your ability to distinguish subtle differences in gray shades
-- [Color Blindness](https://humanbenchmark.app/tests/color-blindness) - Test your color vision with this Ishihara-style test
-- [Face Recognition Test](https://humanbenchmark.app/tests/face-recognition) - Test your face recognition ability
+- [Color Perception](https://humanbenchmark.app/tests/color-perception-test) - Test your color perception ability
+- [Shades of Gray](https://humanbenchmark.app/tests/gray-shades-test) - Test your ability to distinguish subtle differences in gray shades
+- [Color Blindness](https://humanbenchmark.app/tests/color-blindness-test) - Test your color vision with this Ishihara-style test
+- [Face Recognition Test](https://humanbenchmark.app/tests/face-recognition-test) - Test your face recognition ability
 
 ### Audio Tests
-- [Hearing Frequency Range](https://humanbenchmark.app/tests/hearing-frequency) - Test your hearing frequency range from 20Hz to 20,000Hz
+- [Hearing Frequency Range](https://humanbenchmark.app/tests/hearing-frequency-test) - Test your hearing frequency range from 20Hz to 20,000Hz
 - [Audio Reaction Time](https://humanbenchmark.app/tests/audio-reaction-time) - Click to start and click when you hear the beep
 - [Perfect Pitch Test](https://humanbenchmark.app/tests/perfect-pitch) - Click to start and click when you hear the note
 
