@@ -1,42 +1,42 @@
 # Fun Benchmark
 
-[![Fun Benchmark](https://funbenchmark.com/images/logo.png)](https://funbenchmark.com)
+[![Fun Benchmark](https://humanbenchmark.app/tests/images/logo.png)](https://humanbenchmark.app)
 
 Fun Benchmark is a comprehensive platform offering various cognitive tests and brain games to help you measure and improve different aspects of your abilities.
 
 ## 🎯 Features
 
 ### Reaction & Speed Tests
-- [Reaction Time Test](https://funbenchmark.com/reaction-time) - Test your visual reflexes
-- [Audio Reaction Time](https://funbenchmark.com/audio-reaction) - Measure your response to audio stimuli
-- [Aim Trainer](https://funbenchmark.com/aim) - Test your targeting speed and accuracy
-- [Typing Test](https://funbenchmark.com/typing) - Measure your typing speed and accuracy
+- [Reaction Time Test](https://humanbenchmark.app/tests/reaction-time) - Test your visual reflexes
+- [Audio Reaction Time](https://humanbenchmark.app/tests/audio-reaction) - Measure your response to audio stimuli
+- [Aim Trainer](https://humanbenchmark.app/tests/aim) - Test your targeting speed and accuracy
+- [Typing Test](https://humanbenchmark.app/tests/typing) - Measure your typing speed and accuracy
 
 ### Memory Tests
-- [Sequence Memory](https://funbenchmark.com/sequence) - Remember patterns of increasing length
-- [Number Memory](https://funbenchmark.com/number-memory) - Test your numerical memory capacity
-- [Visual Memory](https://funbenchmark.com/memory) - Memorize and recall visual patterns
-- [Verbal Memory](https://funbenchmark.com/verbal-memory) - Test your word recognition abilities
-- [Chimp Test](https://funbenchmark.com/chimp) - Challenge yourself against chimpanzee memory capabilities
+- [Sequence Memory](https://humanbenchmark.app/tests/sequence) - Remember patterns of increasing length
+- [Number Memory](https://humanbenchmark.app/tests/number-memory) - Test your numerical memory capacity
+- [Visual Memory](https://humanbenchmark.app/tests/memory) - Memorize and recall visual patterns
+- [Verbal Memory](https://humanbenchmark.app/tests/verbal-memory) - Test your word recognition abilities
+- [Chimp Test](https://humanbenchmark.app/tests/chimp) - Challenge yourself against chimpanzee memory capabilities
 
 ### Perception Tests
-- [Color Perception](https://funbenchmark.com/color-perception) - Test your ability to distinguish colors
-- [Color Blindness](https://funbenchmark.com/color-blindness) - Ishihara-style color vision test
-- [Shades of Gray](https://funbenchmark.com/gray-shades) - Test your grayscale discrimination
-- [51 Shades of Gray](https://funbenchmark.com/fifty-one-gray-shades) - Advanced grayscale perception challenge
-- [Time Perception](https://funbenchmark.com/time-perception) - Test your time estimation abilities
+- [Color Perception](https://humanbenchmark.app/tests/color-perception) - Test your ability to distinguish colors
+- [Color Blindness](https://humanbenchmark.app/tests/color-blindness) - Ishihara-style color vision test
+- [Shades of Gray](https://humanbenchmark.app/tests/gray-shades) - Test your grayscale discrimination
+- [51 Shades of Gray](https://humanbenchmark.app/tests/fifty-one-gray-shades) - Advanced grayscale perception challenge
+- [Time Perception](https://humanbenchmark.app/tests/time-perception) - Test your time estimation abilities
 
 ### Auditory Tests
-- [Hearing Frequency Range](https://funbenchmark.com/hearing-test) - Test your hearing range (20Hz-20,000Hz)
-- [Perfect Pitch Test](https://funbenchmark.com/perfect-pitch) - Measure your musical note recognition
-- [Audio Reaction Time](https://funbenchmark.com/audio-reaction) - Test your response to sound
+- [Hearing Frequency Range](https://humanbenchmark.app/tests/hearing-test) - Test your hearing range (20Hz-20,000Hz)
+- [Perfect Pitch Test](https://humanbenchmark.app/tests/perfect-pitch) - Measure your musical note recognition
+- [Audio Reaction Time](https://humanbenchmark.app/tests/audio-reaction) - Test your response to sound
 
 ### Visual Recognition
-- [Face Recognition Test](https://funbenchmark.com/face-recognition) - Test your ability to remember and recognize faces
+- [Face Recognition Test](https://humanbenchmark.app/tests/face-recognition) - Test your ability to remember and recognize faces
 
 ## 🌐 Try It Out
 
-Visit [https://funbenchmark.com](https://funbenchmark.com) to start testing and improving your cognitive abilities!
+Visit [https://humanbenchmark.app](https://humanbenchmark.app) to start testing and improving your cognitive abilities!
 
 ## 🎯 Purpose
 
@@ -55,14 +55,42 @@ Fun Benchmark aims to provide:
 
 ## 🔗 Quick Links
 
-- [Home](https://funbenchmark.com)
-- [Categories](https://funbenchmark.com/category)
-- [Articles](https://funbenchmark.com/article)
-- [Changelog](https://funbenchmark.com/changelog)
-- [About](https://funbenchmark.com/about)
-- [Privacy Policy](https://funbenchmark.com/privacy)
-- [Terms of Service](https://funbenchmark.com/terms)
+- [Home](https://humanbenchmark.app)
+- [Categories](https://humanbenchmark.app/tests/category)
+- [Articles](https://humanbenchmark.app/tests/article)
+- [Changelog](https://humanbenchmark.app/tests/changelog)
+- [About](https://humanbenchmark.app/tests/about)
+- [Privacy Policy](https://humanbenchmark.app/tests/privacy)
+- [Terms of Service](https://humanbenchmark.app/tests/terms)
 
 ## 📄 Legal
 
-© 2024 funbenchmark.com. All rights reserved.
+© 2024 humanbenchmark.app. All rights reserved.
+
+## Our Tests
+
+The Human Benchmark test suite at [humanbenchmark.app](https://humanbenchmark.app) includes:
+
+### Core Tests
+- [Reaction Time Test](https://humanbenchmark.app/tests/reactiontime) - Test your visual reflexes
+- [Sequence Memory](https://humanbenchmark.app/tests/sequence) - Remember an increasingly long pattern of button presses
+- [Aim Trainer](https://humanbenchmark.app/tests/aim) - How quickly can you hit all the targets?
+- [Number Memory](https://humanbenchmark.app/tests/number-memory) - Remember the longest number you can
+- [Verbal Memory](https://humanbenchmark.app/tests/verbal-memory) - Keep as many words in short term memory as possible
+- [Chimp Test](https://humanbenchmark.app/tests/chimp) - Are you smater than a chimpanzee?
+- [Typing Test](https://humanbenchmark.app/tests/typing) - How many words per minute can you type?
+- [Time Perception](https://humanbenchmark.app/tests/time-perception) - Test your time perception ability
+
+### Visual Tests
+- [Color Perception](https://humanbenchmark.app/tests/color-perception) - Test your color perception ability
+- [Shades of Gray](https://humanbenchmark.app/tests/shades-of-gray) - Test your ability to distinguish subtle differences in gray shades
+- [Color Blindness](https://humanbenchmark.app/tests/color-blindness) - Test your color vision with this Ishihara-style test
+- [Face Recognition Test](https://humanbenchmark.app/tests/face-recognition) - Test your face recognition ability
+
+### Audio Tests
+- [Hearing Frequency Range](https://humanbenchmark.app/tests/hearing-frequency) - Test your hearing frequency range from 20Hz to 20,000Hz
+- [Audio Reaction Time](https://humanbenchmark.app/tests/audio-reaction-time) - Click to start and click when you hear the beep
+- [Perfect Pitch Test](https://humanbenchmark.app/tests/perfect-pitch) - Click to start and click when you hear the note
+
+### Advanced Tests
+- [Continuous Performance Test(CPT-II)](https://humanbenchmark.app/tests/continuous-performance-test) - Test your continuous performance ability
