@@ -107,3 +107,13 @@
   content: 's';
   margin-left: 1px;
 }
+
+@keyframes hit {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.8); }
+  100% { transform: scale(1); }
+}
+
+.animate-hit {
+  animation: hit 0.2s ease-out;
+}
