@@ -31,19 +31,6 @@ export default async function ReactionTime() {
             "@type": "FAQPage",
             "mainEntity": [
               {
-                "@type": "ItemList",
-                "@id": `${w("domain")}/#tools-list`,
-                "name": "Human Benchmark Tests",
-                "description": "Collection of cognitive tests and brain training exercises",
-                "itemListElement": allTools.map((tool: any, index: number) => ({
-                  "@type": "Thing",
-                  "position": index + 1,
-                  "url": `${w("domain")}${tool.url}`,
-                  "name": tool.name,
-                  "description": tool.description
-                }))
-              },
-              {
                 "@type": "Question",
                 "name": "What is a good reaction time test score?",
                 "acceptedAnswer": {
