@@ -22,21 +22,21 @@ export async function generateMetadata({ params }: PostParams) {
   const domain = w("domain");
   return {
     title: `${postData.title}`,
-    description: postData.description || `Read about ${postData.title} on AI Kratom`,
+    description: postData.description || `Read about ${postData.title}`,
     alternates: {
       canonical: domain+"/article/"+params.slug
     },
     twitter: {
       card: 'summary_large_image',
       title: postData.title,
-      description: postData.description || `Read about ${postData.title} on AI Kratom`,
+      description: postData.description || `Read about ${postData.title}`,
       site: '@BluceC56570',
       images: postData.coverImage || `${domain}/default-social-image.jpg`,
     },
     openGraph: {
       type: 'article',
       title: postData.title,
-      description: postData.description || `Read about ${postData.title} on AI Kratom`,
+      description: postData.description || `Read about ${postData.title}`,
       url: `${domain}/article/${params.slug}`,
       images: postData.coverImage || `${domain}/default-social-image.jpg`,
     },

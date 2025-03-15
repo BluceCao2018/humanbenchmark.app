@@ -61,11 +61,11 @@ export function Footer() {
                   {t('category')}
                 </Link>
               </li>
-              {/* <li>
-                <Link href="/article" className="text-base">
+              <li>
+                <Link href="/article" className="text-base" title="Browse all articles">
                   {t('article')}
                 </Link>
-              </li> */}
+              </li>
               {/*<li>
                 <Link href="/changelog" className="text-base">
                   {t('changelog')}
