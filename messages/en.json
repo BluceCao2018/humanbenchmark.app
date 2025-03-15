@@ -19,7 +19,8 @@
     "meta_title": "Human Benchmark | Free Human Benchmark Tests Online",
     "meta_description": "Human Benchmark is a professional tool that provides brain games and cognitive tests to help you measure your abilities.",
     "h2": "Human Benchmark Test",
-    "description": "Measure your ability with brain games and cognitive tests on Human Benchmark"
+    "description": "Measure your ability with brain games and cognitive tests on Human Benchmark",
+    "homeBtn": "Home"
   },
   "category": {
     "meta_title": "Category｜All the Human Benchmark Test tools",
@@ -64,7 +65,8 @@
     "moreArticleDescription": "More articles",
     "changelogBtn": "Changelog",
     "submitToolBtn": "Submit Tool",
-    "aboutBtn": "About"
+    "aboutBtn": "About",
+    "gamesBtn":"Games"
   },
   "footer": {
     "description": "Measure your ability with brain games and cognitive tests on Human Benchmark",

@@ -22,6 +22,31 @@ export default async function ReactionTime() {
 
   return (
     <>
+      {/* Breadcrumb Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": t('homeBtn'),
+                "item": w("domain")
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Reaction Time Test",
+                "item": `${w("domain")}/tests/reactiontime`
+              }
+            ]
+          })
+        }}
+      />
+
       {/* FAQ Schema */}
       <script
         type="application/ld+json"

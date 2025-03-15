@@ -1,5 +1,6 @@
 import {getTranslations, getLocale} from 'next-intl/server';
 import { ToolsPage } from '@/components/ToolsList'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 
 export async function generateMetadata() {
   const t = await getTranslations('reactionTime');
@@ -32,9 +33,23 @@ export default async function ReactionTimeLayout({
 }: {
   children: React.ReactNode
 }) {
+  const t = await getTranslations('home');
   return (
     <>
       {children}
+      <div  className="container mx-auto px-4 py-12 max-w-4xl">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">{t('homeBtn')}</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage className='capitalize'>Reaction Time Test</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      </div>
     </>
   )
 } 
