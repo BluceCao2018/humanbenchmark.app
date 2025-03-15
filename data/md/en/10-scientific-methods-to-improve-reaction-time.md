@@ -64,10 +64,10 @@ Start your journey to faster reaction times today by incorporating these evidenc
 
 To help you get started with your reaction time improvement journey, here are several tests you can try right now:
 
-- [Reaction Time Test](/tests/reactiontime) - Test your basic visual reflexes
-- [Aim Trainer](/tests/aim) - Measure your reaction speed while targeting specific points
-- [Audio Reaction Time](/tests/audio-reaction-time) - Test how quickly you respond to sound stimuli
-- [Time Perception Test](/tests/time-perception-test) - Evaluate your temporal processing speed
-- [Face Recognition Test](/tests/face-recognition-test) - Test your reaction time in face recognition tasks
+- [Reaction Time Test](/tests/reactiontime "Test your basic visual reflexes") - Test your basic visual reflexes
+- [Aim Trainer](/tests/aim "Measure your reaction speed while targeting specific points") - Measure your reaction speed while targeting specific points
+- [Audio Reaction Time](/tests/audio-reaction-time "Test how quickly you respond to sound stimuli") - Test how quickly you respond to sound stimuli
+- [Time Perception Test](/tests/time-perception-test "Evaluate your temporal processing speed") - Evaluate your temporal processing speed
+- [Face Recognition Test](/tests/face-recognition-test "Test your reaction time in face recognition tasks") - Test your reaction time in face recognition tasks
 
 Regular practice with these tests will help you track your progress and identify areas for improvement. Remember to record your scores and track your improvements over time. Many users find that combining different types of reaction time tests provides a more comprehensive understanding of their cognitive response speed.
