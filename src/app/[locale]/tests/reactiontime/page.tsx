@@ -39,7 +39,7 @@ export default async function ReactionTime() {
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Reaction Time Test",
+                "name": "Reaction-Time-Test",
                 "item": `${w("domain")}/tests/reactiontime`
               }
             ]
