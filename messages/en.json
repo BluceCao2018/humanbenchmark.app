@@ -191,7 +191,18 @@
     "sequenceMemory":"Sequence Memory",
     "statisticsTitle": "Sequence Memory Test Statistics",
     "aboutTitle": "About Sequence Memory Test",
-    "about": "Sequence Memory Test is a valuable tool for measuring short-term memory.<br/>Memorize the sequence of buttons that light up, then press them in order.<br/>Every time you finish the pattern, it gets longer.<br/>Make a mistake, and the test is over."
+    "about": "Sequence Memory Test is a valuable tool for measuring short-term memory.<br/>Memorize the sequence of buttons that light up, then press them in order.<br/>Every time you finish the pattern, it gets longer.<br/>Make a mistake, and the test is over.",
+    "tutorial": {
+      "help": "Show Help",
+    "howToPlay": "How to Play",
+    "step1": "Watch the sequence of blue squares",
+    "step2": "Remember the order they appear",
+    "step3": "Click the squares in the same order",
+    "step4": "Complete each level to progress",
+    "gotIt": "Got it!"
+  },
+  "retry": "Retry Current Level",
+    "retryLevel": "Retry"
   },
   "aim": {
     "meta_title": "Free Aim Trainer Online | Aim Test | Human Benchmark Test",
