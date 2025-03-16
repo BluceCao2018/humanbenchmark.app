@@ -90,6 +90,8 @@ export default function GyroscopeBalance() {
           
           if (response === 'granted') {
             console.log('Permission granted, testing gyroscope...')
+            let hasReceivedData = false
+            
             // 测试陀螺仪是否真的可用
             const testHandler = (event: DeviceOrientationEvent) => {
               console.log('Orientation event received:', {
@@ -99,6 +101,7 @@ export default function GyroscopeBalance() {
               })
               
               if (event.beta !== null && event.gamma !== null) {
+                hasReceivedData = true
                 window.removeEventListener('deviceorientation', testHandler)
                 console.log('Valid gyroscope data received, starting game')
                 initializeGame()
@@ -110,7 +113,7 @@ export default function GyroscopeBalance() {
             // 如果3秒内没有收到任何数据，认为陀螺仪不可用
             setTimeout(() => {
               window.removeEventListener('deviceorientation', testHandler)
-              if (gameState.status !== 'playing') {
+              if (!hasReceivedData) {
                 console.log('No gyroscope data received after timeout')
                 setGameState(prev => ({
                   ...prev,
