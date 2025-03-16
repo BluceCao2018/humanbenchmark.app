@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useTranslations } from 'use-intl';
 import staticContent from '../alltoolslist.html'
 
-export default async function AimTrainerTest() {
+export default function AimTrainerTest() {
   const [gameState, setGameState] = useState<'start' | 'playing' | 'result'>('start')
   const [targetPosition, setTargetPosition] = useState<{ x: number, y: number } | null>(null)
   const [stats, setStats] = useState({
