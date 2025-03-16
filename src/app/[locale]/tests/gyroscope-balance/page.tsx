@@ -29,6 +29,12 @@ export default function GyroscopeBalance() {
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const scoreRef = useRef<number>(0)
   const gyroscopeAvailable = useRef<boolean>(false)
+  const gameStateRef = useRef<GameState>(gameState)
+
+  useEffect(() => {
+    gameStateRef.current = gameState
+    console.log('Game state updated:', gameState.status)
+  }, [gameState])
 
   useEffect(() => {
     // 检查设备是否支持陀螺仪
@@ -157,16 +163,18 @@ export default function GyroscopeBalance() {
   }
 
   const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
+    // 使用 ref 来获取最新的游戏状态
+    const currentState = gameStateRef.current
+    
     // 添加调试日志
     console.log('Device orientation event:', {
-      status: gameState.status,
+      status: currentState.status,
       beta: event.beta,
       gamma: event.gamma
     })
     
-    // 使用 ref 来跟踪最新的游戏状态
-    if (gameState.status !== 'playing') {
-      console.log('Game not in playing state:', gameState.status)
+    if (currentState.status !== 'playing') {
+      console.log('Game not in playing state:', currentState.status)
       return
     }
     
@@ -236,51 +244,41 @@ export default function GyroscopeBalance() {
     ballX.set(0)
     ballY.set(0)
     
-    // 使用 Promise 来确保状态更新完成
-    const updateState = () => new Promise<void>(resolve => {
-      setGameState(prev => {
-        console.log('Setting game state to playing...', prev.status)
-        return {
-          ...prev,
-          status: 'playing',
-          score: 0,
-          timeRemaining: 30,
-          error: undefined // 清除错误状态
-        }
-      })
-      // 使用 setTimeout 确保状态已更新
-      setTimeout(resolve, 0)
+    // 直接设置状态，不使用 Promise
+    console.log('Setting game state to playing...')
+    setGameState({
+      status: 'playing',
+      score: 0,
+      timeRemaining: 30,
+      bestScore: gameState.bestScore,
+      error: undefined
     })
     
-    // 异步初始化游戏
-    updateState().then(() => {
-      console.log('Game state updated, adding event listener...')
-      // 添加新的事件监听器
-      window.addEventListener('deviceorientation', handleDeviceOrientation)
-      
-      // 开始倒计时
-      console.log('Starting game timer...')
-      timerRef.current = setInterval(() => {
-        setGameState(prev => {
-          console.log('Timer update, current state:', prev.status)
-          if (prev.timeRemaining <= 1) {
-            console.log('Game finished!')
-            clearInterval(timerRef.current!)
-            window.removeEventListener('deviceorientation', handleDeviceOrientation)
-            return {
-              ...prev,
-              status: 'result',
-              timeRemaining: 0,
-              bestScore: Math.max(prev.bestScore, prev.score)
-            }
-          }
+    // 添加新的事件监听器
+    console.log('Adding device orientation event listener...')
+    window.addEventListener('deviceorientation', handleDeviceOrientation)
+    
+    // 开始倒计时
+    console.log('Starting game timer...')
+    timerRef.current = setInterval(() => {
+      setGameState(prev => {
+        if (prev.timeRemaining <= 1) {
+          console.log('Game finished!')
+          clearInterval(timerRef.current!)
+          window.removeEventListener('deviceorientation', handleDeviceOrientation)
           return {
             ...prev,
-            timeRemaining: prev.timeRemaining - 1
+            status: 'result',
+            timeRemaining: 0,
+            bestScore: Math.max(prev.bestScore, prev.score)
           }
-        })
-      }, 1000)
-    })
+        }
+        return {
+          ...prev,
+          timeRemaining: prev.timeRemaining - 1
+        }
+      })
+    }, 1000)
   }
 
   const resetGame = () => {
