@@ -102,33 +102,23 @@ export default function GyroscopeBalance() {
                 window.removeEventListener('deviceorientation', testHandler)
                 console.log('Valid gyroscope data received, starting game')
                 initializeGame()
-              } else {
-                console.log('Invalid gyroscope data received')
+              }
+            }
+            
+            window.addEventListener('deviceorientation', testHandler)
+            
+            // 如果3秒内没有收到任何数据，认为陀螺仪不可用
+            setTimeout(() => {
+              window.removeEventListener('deviceorientation', testHandler)
+              if (gameState.status !== 'playing') {
+                console.log('No gyroscope data received after timeout')
                 setGameState(prev => ({
                   ...prev,
                   status: 'error',
                   error: 'nogyroscope'
                 }))
               }
-            }
-            
-            window.addEventListener('deviceorientation', testHandler)
-            
-            // 如果1秒内没有收到有效数据，认为陀螺仪不可用
-            setTimeout(() => {
-              window.removeEventListener('deviceorientation', testHandler)
-              console.log('No gyroscope data received after timeout')
-              setGameState(prev => {
-                if (prev.status !== 'playing') {
-                  return {
-                    ...prev,
-                    status: 'error',
-                    error: 'nogyroscope'
-                  }
-                }
-                return prev
-              })
-            }, 1000)
+            }, 3000)
           } else {
             console.log('Permission denied by user')
             setGameState(prev => ({
