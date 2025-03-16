@@ -20,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
         url: 'article', // article
-        lastModified: new Date("2025-03-15 13:13:00"),
+        lastModified: new Date("2025-03-16 13:13:00"),
         changeFrequency: 'daily',
         priority: 0.8,
       },
