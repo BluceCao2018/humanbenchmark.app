@@ -94,7 +94,7 @@ export default function GyroscopeBalance() {
             
             // 测试陀螺仪是否真的可用
             const testHandler = (event: DeviceOrientationEvent) => {
-              console.log('Orientation event received:', {
+              console.log('Test orientation event received:', {
                 alpha: event.alpha,
                 beta: event.beta,
                 gamma: event.gamma
@@ -103,7 +103,8 @@ export default function GyroscopeBalance() {
               if (event.beta !== null && event.gamma !== null) {
                 hasReceivedData = true
                 window.removeEventListener('deviceorientation', testHandler)
-                console.log('Valid gyroscope data received, starting game')
+                console.log('Valid gyroscope data received, initializing game...')
+                // 直接调用初始化，不要等待状态更新
                 initializeGame()
               }
             }
@@ -112,8 +113,8 @@ export default function GyroscopeBalance() {
             
             // 如果3秒内没有收到任何数据，认为陀螺仪不可用
             setTimeout(() => {
-              window.removeEventListener('deviceorientation', testHandler)
               if (!hasReceivedData) {
+                window.removeEventListener('deviceorientation', testHandler)
                 console.log('No gyroscope data received after timeout')
                 setGameState(prev => ({
                   ...prev,
@@ -136,7 +137,7 @@ export default function GyroscopeBalance() {
         }
       } else {
         // 非 iOS 设备直接开始游戏
-        console.log('Permission not required, starting game directly')
+        console.log('Permission not required, initializing game directly')
         initializeGame()
       }
     } catch (error) {
@@ -214,7 +215,6 @@ export default function GyroscopeBalance() {
 
   const initializeGame = () => {
     console.log('Initializing game...')
-    scoreRef.current = 0
     
     // 先移除可能存在的旧事件监听器
     window.removeEventListener('deviceorientation', handleDeviceOrientation)
@@ -222,18 +222,25 @@ export default function GyroscopeBalance() {
       clearInterval(timerRef.current)
     }
     
+    // 重置游戏状态和分数
+    scoreRef.current = 0
+    
     // 重置球的位置
     ballX.set(0)
     ballY.set(0)
     
-    // 更新游戏状态
-    setGameState(prev => ({
-      ...prev,
-      status: 'playing',
-      score: 0,
-      timeRemaining: 30
-    }))
-
+    // 先更新状态
+    setGameState(prev => {
+      console.log('Setting game state to playing...')
+      return {
+        ...prev,
+        status: 'playing',
+        score: 0,
+        timeRemaining: 30,
+        error: undefined // 清除错误状态
+      }
+    })
+    
     // 添加新的事件监听器
     console.log('Adding device orientation event listener...')
     window.addEventListener('deviceorientation', handleDeviceOrientation)
