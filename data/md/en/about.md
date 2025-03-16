@@ -1,3 +1,11 @@
+---
+title: "About Human Benchmark"
+date: "2025-03-16"
+author: "Human Benchmark"
+category: "website"
+tags: [""]
+---
+
 # About Human Benchmark
 
 Welcome to Human Benchmark, your premier destination for cognitive testing and brain training. Our platform offers a comprehensive suite of scientifically-designed tests that measure various aspects of human cognitive performance, helping you understand and improve your mental capabilities.
