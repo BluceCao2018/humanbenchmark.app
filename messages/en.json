@@ -252,7 +252,26 @@
     "tryAgain":"Try again",
     "statisticsTitle": "Number Memory Test Statistics",
     "aboutTitle":"About Number Memory Test",
-    "about":"The average person can only remember 7 digit numbers reliably, but it's possible to do much better using mnemonic techniques. "
+    "about":"The average person can only remember 7 digit numbers reliably, but it's possible to do much better using mnemonic techniques. ",
+    "tutorial": {
+    "help": "Show Help",
+    "howToPlay": "How to Play Number Memory",
+    "step1": "Remember the number shown",
+    "step2": "Wait for the progress bar to complete",
+    "step3": "Enter the number you remembered",
+    "step4": "Progress to next level with longer numbers",
+    "gotIt": "Got it!"
+  },
+  "sound": {
+    "enable": "Enable Sound",
+    "disable": "Disable Sound"
+  },
+  "stats": {
+    "level": "Level",
+    "digits": "Digits",
+    "correct": "Correct Number",
+    "yourAnswer": "Your Answer"
+  }
   },
   "memory": {
     "meta_title": "Free Visual Memory Test Online | Human Benchmark Test",

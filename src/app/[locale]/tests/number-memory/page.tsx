@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image'
@@ -16,7 +16,13 @@ export default function NumberMemoryTest() {
   const [timer, setTimer] = useState<number>(0)
   const [progress, setProgress] = useState(100)
   const [showEmbedDialog, setShowEmbedDialog] = useState(false)
-  
+  const [showTutorial, setShowTutorial] = useState(true)
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true)
+
+  // Add sound refs
+  const correctSoundRef = useRef<HTMLAudioElement | null>(null)
+  const wrongSoundRef = useRef<HTMLAudioElement | null>(null)
+
   const baseTime = 1000
   const timePerDigit = 1000
 
@@ -65,6 +71,37 @@ export default function NumberMemoryTest() {
     }
   }, [isIframe, gameState, level, currentNumber, userInput])
 
+  // Initialize audio
+  useEffect(() => {
+    const soundPreference = localStorage.getItem('numberMemorySoundEnabled')
+    setIsSoundEnabled(soundPreference !== 'false')
+
+    correctSoundRef.current = new Audio('/sounds/correct.mp3')
+    wrongSoundRef.current = new Audio('/sounds/wrong.mp3')
+
+    const audioElements = [correctSoundRef, wrongSoundRef]
+    audioElements.forEach(ref => {
+      if (ref.current) {
+        ref.current.volume = 0.5
+      }
+    })
+  }, [])
+
+  // Sound utility function
+  const playSound = (soundRef: React.RefObject<HTMLAudioElement>) => {
+    if (isSoundEnabled && soundRef.current) {
+      soundRef.current.currentTime = 0
+      soundRef.current.play().catch(e => console.log('Audio play failed:', e))
+    }
+  }
+
+  // Toggle sound function
+  const toggleSound = () => {
+    const newState = !isSoundEnabled
+    setIsSoundEnabled(newState)
+    localStorage.setItem('numberMemorySoundEnabled', newState.toString())
+  }
+
   const generateNumber = () => {
     // 随机生成数字，长度随级别增加
     const digits = level + 1
@@ -94,10 +131,12 @@ export default function NumberMemoryTest() {
     e.preventDefault()
     
     if (userInput === currentNumber) {
+      playSound(correctSoundRef)
       // 答对进入下一关
       setLevel(prev => prev + 1)
       startGame()
     } else {
+      playSound(wrongSoundRef)
       // 答错进入结果页
       setGameState('result')
     }
@@ -129,6 +168,94 @@ export default function NumberMemoryTest() {
 
   return (
     <>
+      {/* Add control buttons */}
+      <div className="fixed top-[calc(65px+1rem)] left-4 z-[100]">
+        <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full border border-white/20 p-1">
+          <button
+            onClick={() => setShowTutorial(true)}
+            className="w-8 h-8 rounded-full hover:bg-white/20 
+                     flex items-center justify-center transition-all duration-200 
+                     text-white"
+            title={t("tutorial.help")}
+          >
+            <i className="fas fa-question-circle text-lg"></i>
+          </button>
+          
+          <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
+
+          <button
+            onClick={toggleSound}
+            className="w-8 h-8 rounded-full hover:bg-white/20
+                     flex items-center justify-center transition-all duration-200 
+                     text-white"
+            title={isSoundEnabled ? t("sound.disable") : t("sound.enable")}
+          >
+            <i className={`fas ${isSoundEnabled ? 'fa-volume-up' : 'fa-volume-mute'} text-lg`}></i>
+          </button>
+        </div>
+      </div>
+
+      {/* Add tutorial overlay */}
+      {showTutorial && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div 
+            className="backdrop-blur-sm bg-black/30 absolute inset-0" 
+            onClick={() => setShowTutorial(false)} 
+          />
+          <div className="relative bg-white/90 dark:bg-gray-800/90 p-6 rounded-xl shadow-xl max-w-md mx-4 animate-fade-in">
+            <button 
+              onClick={() => setShowTutorial(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <i className="fas fa-times text-xl"></i>
+            </button>
+            
+            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+              <i className="fas fa-th text-blue-500"></i>
+              {t("tutorial.howToPlay")}
+            </h3>
+            
+            <ol className="list-decimal list-inside space-y-3 text-gray-700 dark:text-gray-300">
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-blue-500">
+                  <i className="fas fa-eye w-6"></i>
+                </span>
+                {t("tutorial.step1")} {/* 记住显示的数字 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-purple-500">
+                  <i className="fas fa-clock w-6"></i>
+                </span>
+                {t("tutorial.step2")} {/* 等待进度条结束 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-green-500">
+                  <i className="fas fa-keyboard w-6"></i>
+                </span>
+                {t("tutorial.step3")} {/* 输入你记住的数字 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-yellow-500">
+                  <i className="fas fa-level-up-alt w-6"></i>
+                </span>
+                {t("tutorial.step4")} {/* 答对进入下一关，数字会变长 */}
+              </li>
+            </ol>
+
+            <div className="mt-6 flex justify-end">
+              <button 
+                onClick={() => setShowTutorial(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                         transition-colors duration-200 flex items-center gap-2"
+              >
+                <i className="fas fa-check"></i>
+                {t("tutorial.gotIt")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* FAQ Schema */}
       <script
         type="application/ld+json"
@@ -241,22 +368,69 @@ export default function NumberMemoryTest() {
           )}
 
           {gameState === 'result' && (
-            <div   className='flex flex-col justify-center items-center'>
-              <h2 className="text-2xl mb-4">{t("number")}</h2>
+            <div className="text-center text-white">
+              <i className="fas fa-th text-9xl text-white mb-8 animate-fade"></i>
               
-              <p className="text-3xl font-bold mb-6">{currentNumber}</p>
-              <h2 className="text-2xl mb-4">{t("youAnswer")}</h2>
-              <p className="text-3xl font-bold mb-4 line-through text-red">{userInput}</p>
-              <h2  className="text-7xl font-bold mb-6">{t("level")} {level}</h2>
-              <button 
-                onClick={() => {
-                  setGameState('start')
-                  setLevel(1)
-                }}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
-              >
-                {t("tryAgain")}
-              </button>
+              {/* 统计卡片网格 */}
+              <div className="grid grid-cols-2 gap-4 max-w-xl mx-auto mb-8">
+                {/* 当前关卡 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-layer-group mr-2"></i>
+                    {t("stats.level")}
+                  </div>
+                  <div className="text-4xl font-bold">
+                    {level}
+                  </div>
+                </div>
+
+                {/* 数字长度 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-text-width mr-2"></i>
+                    {t("stats.digits")}
+                  </div>
+                  <div className="text-4xl font-bold">
+                    {currentNumber.length}
+                  </div>
+                </div>
+
+                {/* 正确数字 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-check mr-2"></i>
+                    {t("stats.correct")}
+                  </div>
+                  <div className="text-2xl font-bold">
+                    {currentNumber}
+                  </div>
+                </div>
+
+                {/* 你的答案 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-times mr-2"></i>
+                    {t("stats.yourAnswer")}
+                  </div>
+                  <div className="text-2xl font-bold text-red-400">
+                    {userInput}
+                  </div>
+                </div>
+              </div>
+
+              {/* 操作按钮 */}
+              <div className="flex justify-center gap-4">
+                <button 
+                  onClick={() => {
+                    setGameState('start')
+                    setLevel(1)
+                  }}
+                  className="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                >
+                  <i className="fas fa-redo"></i>
+                  {t("tryAgain")}
+                </button>
+              </div>
             </div>
           )}
         </div>
