@@ -105,6 +105,7 @@
     "h1":"Reaction Time Test",
     "h2":"",
     "description":"When the red box turns greeen,click as quickly as you can.<br/>Click anywhere to start.",
+    "homeBtn":"Home",
     "clickToStart": "Click to Start",
     "waitForGreen": "Wait for Green",
     "tooSoon":"Too Soon",
