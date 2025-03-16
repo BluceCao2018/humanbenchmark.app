@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useTranslations } from 'use-intl';
 import staticContent from '../alltoolslist.html'
@@ -15,6 +15,12 @@ export default function AimTrainerTest() {
 
   const [remainingCount, setRemainingCount] =useState(30)
   const [lastClickTime, setLastClickTime] = useState(0)
+  const [showTutorial, setShowTutorial] = useState(true)
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true)
+  
+  // Audio refs
+  const hitSoundRef = useRef<HTMLAudioElement | null>(null)
+  const missSoundRef = useRef<HTMLAudioElement | null>(null)
 
   const t = useTranslations('aim');
   
@@ -36,6 +42,40 @@ export default function AimTrainerTest() {
     const y = Math.random() * (bannerHeight - navHeight - 100); // 100 是图标的高度
     console.log('Target generated at:', { x, y: y + navHeight })
     setTargetPosition({ x, y: y + navHeight })
+  }
+
+  // Initialize audio elements
+  useEffect(() => {
+    // Load sound preference from localStorage
+    const soundPreference = localStorage.getItem('aimTrainerSoundEnabled')
+    setIsSoundEnabled(soundPreference !== 'false')
+
+    // Initialize audio elements
+    hitSoundRef.current = new Audio('/sounds/hit.mp3')
+    missSoundRef.current = new Audio('/sounds/miss.mp3')
+
+    // Set volume
+    const audioElements = [hitSoundRef, missSoundRef]
+    audioElements.forEach(ref => {
+      if (ref.current) {
+        ref.current.volume = 0.5
+      }
+    })
+  }, [])
+
+  // Sound utility function
+  const playSound = (soundRef: React.RefObject<HTMLAudioElement>) => {
+    if (isSoundEnabled && soundRef.current) {
+      soundRef.current.currentTime = 0
+      soundRef.current.play().catch(e => console.log('Audio play failed:', e))
+    }
+  }
+
+  // Toggle sound function
+  const toggleSound = () => {
+    const newState = !isSoundEnabled
+    setIsSoundEnabled(newState)
+    localStorage.setItem('aimTrainerSoundEnabled', newState.toString())
   }
 
   const handleTargetClick = (e: React.MouseEvent) => {
@@ -70,6 +110,7 @@ export default function AimTrainerTest() {
     }
 
     if (isHit) {
+      playSound(hitSoundRef) // Play hit sound
       const currentTime = performance.now()
       const reactionTime = currentTime - lastClickTime
       updatedStats.correctClicks += 1
@@ -80,6 +121,8 @@ export default function AimTrainerTest() {
         setRemainingCount(remainingCount - 1)
       }
       generateTarget()
+    } else {
+      playSound(missSoundRef) // Play miss sound
     }
 
     setStats(updatedStats)
@@ -155,6 +198,94 @@ export default function AimTrainerTest() {
         }}
       />
 
+      {/* Add help button and tutorial overlay */}
+      <div className="fixed top-[calc(65px+1rem)] left-4 z-[100]">
+        <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full border border-white/20 p-1">
+          <button
+            onClick={() => setShowTutorial(true)}
+            className="w-8 h-8 rounded-full hover:bg-white/20 
+                     flex items-center justify-center transition-all duration-200 
+                     text-white"
+            title={t("tutorial.help")}
+          >
+            <i className="fas fa-question-circle text-lg"></i>
+          </button>
+          
+          <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
+
+          <button
+            onClick={toggleSound}
+            className="w-8 h-8 rounded-full hover:bg-white/20
+                     flex items-center justify-center transition-all duration-200 
+                     text-white"
+            title={isSoundEnabled ? t("sound.disable") : t("sound.enable")}
+          >
+            <i className={`fas ${isSoundEnabled ? 'fa-volume-up' : 'fa-volume-mute'} text-lg`}></i>
+          </button>
+        </div>
+      </div>
+
+      {/* Tutorial Overlay */}
+      {showTutorial && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div 
+            className="backdrop-blur-sm bg-black/30 absolute inset-0" 
+            onClick={() => setShowTutorial(false)} 
+          />
+          <div className="relative bg-white/90 dark:bg-gray-800/90 p-6 rounded-xl shadow-xl max-w-md mx-4 animate-fade-in">
+            <button 
+              onClick={() => setShowTutorial(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <i className="fas fa-times text-xl"></i>
+            </button>
+            
+            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+              <i className="fas fa-bullseye text-red-500"></i>
+              {t("tutorial.howToPlay")}
+            </h3>
+            
+            <ol className="list-decimal list-inside space-y-3 text-gray-700 dark:text-gray-300">
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-blue-500">
+                  <i className="fas fa-mouse-pointer w-6"></i>
+                </span>
+                {t("tutorial.step1")} {/* 点击出现的目标 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-red-500">
+                  <i className="fas fa-tachometer-alt w-6"></i>
+                </span>
+                {t("tutorial.step2")} {/* 越快点击越好 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-green-500">
+                  <i className="fas fa-bullseye w-6"></i>
+                </span>
+                {t("tutorial.step3")} {/* 目标会随机出现在屏幕上 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-yellow-500">
+                  <i className="fas fa-trophy w-6"></i>
+                </span>
+                {t("tutorial.step4")} {/* 完成30次点击后显示平均反应时间 */}
+              </li>
+            </ol>
+
+            <div className="mt-6 flex justify-end">
+              <button 
+                onClick={() => setShowTutorial(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                         transition-colors duration-200 flex items-center gap-2"
+              >
+                <i className="fas fa-check"></i>
+                {t("tutorial.gotIt")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="w-full mx-auto py-0 space-y-16">
         <div className="banner w-full h-[550px] flex flex-col justify-center items-center bg-blue-theme">
          
@@ -168,36 +299,127 @@ export default function AimTrainerTest() {
 
           {gameState === 'playing' && targetPosition && (
             <div className='flex flex-col justify-center items-center text-white'>
-            <div 
-              onClick={handleTargetClick}
-              className='animate-fade'
-              style={{
-                position: 'absolute', 
-                left: `${targetPosition.x}px`, 
-                top: `${targetPosition.y}px`, 
-                width: '100px', 
-                height: '100px', 
-                cursor: 'pointer',
-                zIndex: 1000 // 确保在最上层
-              }}
-            >
-              <i className="fas fa-bullseye text-white" style={{ fontSize: '100px' }}></i>
-            </div>
-            <h2 className="text-2xl font-bold mb-4">Remaining {remainingCount}</h2>
+              {/* 添加顶部状态栏 */}
+              <div className="fixed top-[calc(65px+4rem)] left-1/2 transform -translate-x-1/2 w-96 flex flex-col items-center gap-3">
+                {/* 进度条 */}
+                <div className="w-full bg-white/20 rounded-full h-2">
+                  <div 
+                    className="bg-white h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${((30 - remainingCount) / 30) * 100}%` }}
+                  />
+                </div>
+                
+                {/* 统计信息 */}
+                <div className="flex justify-between w-full text-sm">
+                  <div className="flex items-center gap-2">
+                    <i className="fas fa-crosshairs"></i>
+                    <span>{30 - remainingCount}/30</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <i className="fas fa-stopwatch"></i>
+                    <span>
+                      {stats.reactionTimes.length > 0 
+                        ? `${stats.reactionTimes[stats.reactionTimes.length - 1].toFixed(0)}ms` 
+                        : '---'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <i className="fas fa-percentage"></i>
+                    <span>{((stats.correctClicks / Math.max(stats.totalClicks, 1)) * 100).toFixed(1)}%</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 目标 - 添加动画效果 */}
+              <div 
+                onClick={handleTargetClick}
+                className='animate-pop-in'
+                style={{
+                  position: 'absolute', 
+                  left: `${targetPosition.x}px`, 
+                  top: `${targetPosition.y}px`, 
+                  width: '100px', 
+                  height: '100px', 
+                  cursor: 'pointer',
+                  zIndex: 1000
+                }}
+              >
+                <i className="fas fa-bullseye text-white" style={{ fontSize: '100px' }}></i>
+              </div>
             </div>
           )}
 
           {gameState === 'result' && (
             <div className="text-center text-white">
-              <i className="fas fa-bullseye text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
-              <h2 className="text-2xl font-bold mb-4">Average time per target</h2>
-              <h1  className="text-5xl font-bold mb-4">{calculateAverageReactionTime()}ms</h1>
-              <button 
-                onClick={() => setGameState('start')}
-                className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
-              >
-                {t("tryAgain")}
-              </button>
+              <i className="fas fa-bullseye text-9xl text-white mb-8 animate-fade"></i>
+              
+              {/* 统计卡片网格 */}
+              <div className="grid grid-cols-2 gap-4 max-w-xl mx-auto mb-8">
+                {/* 平均反应时间 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-clock mr-2"></i>
+                    {t("stats.avgTime")}
+                  </div>
+                  <div className="text-4xl font-bold">
+                    {calculateAverageReactionTime()}
+                    <span className="text-2xl">ms</span>
+                  </div>
+                </div>
+
+                {/* 准确率 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-bullseye mr-2"></i>
+                    {t("stats.accuracy")}
+                  </div>
+                  <div className="text-4xl font-bold">
+                    {((stats.correctClicks / stats.totalClicks) * 100).toFixed(1)}
+                    <span className="text-2xl">%</span>
+                  </div>
+                </div>
+
+                {/* 最佳时间 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-trophy mr-2"></i>
+                    {t("stats.bestTime")}
+                  </div>
+                  <div className="text-4xl font-bold">
+                    {Math.min(...stats.reactionTimes).toFixed(0)}
+                    <span className="text-2xl">ms</span>
+                  </div>
+                </div>
+
+                {/* 总点击数 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-mouse-pointer mr-2"></i>
+                    {t("stats.totalClicks")}
+                  </div>
+                  <div className="text-4xl font-bold">
+                    {stats.totalClicks}
+                  </div>
+                </div>
+              </div>
+
+              {/* 操作按钮 */}
+              <div className="flex justify-center gap-4">
+                <button 
+                  onClick={() => startGame()}
+                  className="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                >
+                  <i className="fas fa-redo"></i>
+                  {t("tryAgain")}
+                </button>
+                <button 
+                  onClick={() => setGameState('start')}
+                  className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-2"
+                >
+                  <i className="fas fa-home"></i>
+                  {t("backToStart")}
+                </button>
+              </div>
             </div>
           )}
           </div>

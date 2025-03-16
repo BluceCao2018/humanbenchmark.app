@@ -214,7 +214,27 @@
     "tryAgain":"Try again",
     "statisticsTitle": "Aim Trainer Statistics",
     "aboutTitle": "About Aim Trainer",
-    "about":"Click the targets as quickly and accurately as you can.<br/>This tests reflexes and hand-eye coordination.<br/>Once you've clicked 30 targets, your score and average time per target will be displayed.<br/>This test is best taken with a mouse or tablet screen. Trackpads are difficult to score well with."
+    "about":"Click the targets as quickly and accurately as you can.<br/>This tests reflexes and hand-eye coordination.<br/>Once you've clicked 30 targets, your score and average time per target will be displayed.<br/>This test is best taken with a mouse or tablet screen. Trackpads are difficult to score well with.",
+    "tutorial": {
+      "help": "Show Help",
+      "howToPlay": "How to Play Aim Trainer",
+      "step1": "Click on the targets as they appear",
+      "step2": "React as quickly as possible - speed matters!",
+      "step3": "Targets will appear randomly across the screen",
+      "step4": "Complete 30 targets to see your average reaction time",
+      "gotIt": "Got it!"
+    },
+    "stats": {
+    "avgTime": "Average Time",
+    "accuracy": "Accuracy",
+    "bestTime": "Best Time",
+    "totalClicks": "Total Clicks"
+  },
+  "backToStart": "Back to Start",
+  "sound": {
+    "enable": "Enable Sound",
+    "disable": "Disable Sound"
+  }
   },
   "numberMemory": {
     "meta_title": "Free Number Memory Test Online | Human Benchmark Test",
