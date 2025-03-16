@@ -44,8 +44,12 @@ export default function AudioReactionTime() {
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const audioContext = useRef<AudioContext | null>(null)
   const [showSharePoster, setShowSharePoster] = useState(false)
+  const [showTutorial, setShowTutorial] = useState(true)
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true)
 
   const playBeep = () => {
+    if (!isSoundEnabled) return
+    
     if (!audioContext.current) {
       audioContext.current = new AudioContext()
     }
@@ -270,6 +274,18 @@ export default function AudioReactionTime() {
     )
   }
 
+  // 音量控制函数
+  const toggleSound = () => {
+    const newState = !isSoundEnabled
+    setIsSoundEnabled(newState)
+    localStorage.setItem('audioReactionSoundEnabled', newState.toString())
+    
+    // 更新蜂鸣声音量
+    if (audioContext.current) {
+      const gainNode = audioContext.current.createGain()
+      gainNode.gain.value = newState ? 0.1 : 0
+    }
+  }
 
   return (
     <>
@@ -467,6 +483,94 @@ export default function AudioReactionTime() {
       </section>
       </div>
       </div>
+
+      {/* Add control buttons */}
+      <div className="fixed top-[calc(65px+1rem)] left-4 z-[100]">
+        <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full border border-white/20 p-1">
+          <button
+            onClick={() => setShowTutorial(true)}
+            className="w-8 h-8 rounded-full hover:bg-white/20 
+                     flex items-center justify-center transition-all duration-200 
+                     text-white"
+            title={t("tutorial.help")}
+          >
+            <i className="fas fa-question-circle text-lg"></i>
+          </button>
+          
+          <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
+
+          <button
+            onClick={toggleSound}
+            className="w-8 h-8 rounded-full hover:bg-white/20
+                     flex items-center justify-center transition-all duration-200 
+                     text-white"
+            title={isSoundEnabled ? t("sound.disable") : t("sound.enable")}
+          >
+            <i className={`fas ${isSoundEnabled ? 'fa-volume-up' : 'fa-volume-mute'} text-lg`}></i>
+          </button>
+        </div>
+      </div>
+
+      {/* Add tutorial overlay */}
+      {showTutorial && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div 
+            className="backdrop-blur-sm bg-black/30 absolute inset-0" 
+            onClick={() => setShowTutorial(false)} 
+          />
+          <div className="relative bg-white/90 dark:bg-gray-800/90 p-6 rounded-xl shadow-xl max-w-md mx-4 animate-fade-in">
+            <button 
+              onClick={() => setShowTutorial(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <i className="fas fa-times text-xl"></i>
+            </button>
+            
+            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+              <i className="fas fa-volume-up text-blue-500"></i>
+              {t("tutorial.howToPlay")}
+            </h3>
+            
+            <ol className="list-decimal list-inside space-y-3 text-gray-700 dark:text-gray-300">
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-blue-500">
+                  <i className="fas fa-play w-6"></i>
+                </span>
+                {t("tutorial.step1")} {/* 点击开始测试 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-yellow-500">
+                  <i className="fas fa-hourglass-start w-6"></i>
+                </span>
+                {t("tutorial.step2")} {/* 等待声音提示 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-green-500">
+                  <i className="fas fa-bolt w-6"></i>
+                </span>
+                {t("tutorial.step3")} {/* 听到声音后立即点击 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-purple-500">
+                  <i className="fas fa-redo w-6"></i>
+                </span>
+                {t("tutorial.step4")} {/* 完成5次测试查看平均成绩 */}
+              </li>
+            </ol>
+
+            <div className="mt-6 flex justify-end">
+              <button 
+                onClick={() => setShowTutorial(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                         transition-colors duration-200 flex items-center gap-2"
+              >
+                <i className="fas fa-check"></i>
+                {t("tutorial.gotIt")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 } 

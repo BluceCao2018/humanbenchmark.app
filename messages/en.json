@@ -537,7 +537,20 @@
       "share": "Share",
       "title": "Audio Reaction Time Test Result",
       "text": "My reaction time is {time}ms, ranked #{rank}! Come and try it!"
-    }
+    },
+    "tutorial": {
+    "help": "Show Help",
+    "howToPlay": "How to Test Audio Reaction Time",
+    "step1": "Click to start the test",
+    "step2": "Wait for the beep sound",
+    "step3": "Click immediately when you hear the sound",
+    "step4": "Complete 5 attempts to see your average time",
+    "gotIt": "Got it!"
+  },
+  "sound": {
+    "enable": "Enable Sound",
+    "disable": "Disable Sound"
+  }
   },
   "sprinter": {
     "meta_title": "Free Reaction Time Test For Sprinters | Human Benchmark Test",
