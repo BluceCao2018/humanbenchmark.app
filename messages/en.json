@@ -705,7 +705,23 @@
     "errors": "Errors",
     "omissions": "Omissions",
     "averageResponse": "Average Response (ms)",
-    "accuracy": "Accuracy"
+    "accuracy": "Accuracy",
+    "tutorial": {
+    "help": "Show Help",
+    "howToPlay": "How to Take the Test",
+    "step1": "Watch for letters appearing on screen",
+    "step2": "Press spacebar or click when you see the letter 'X'",
+    "step3": "Stay focused for the selected duration",
+    "step4": "Review your detailed performance analysis",
+    "gotIt": "Got it!"
+  },
+  "selectDuration": "Select Test Duration",
+  "testDuration": "Test Duration",
+  "minutes": "minutes",
+  "sound": {
+    "enable": "Enable Sound",
+    "disable": "Disable Sound"
+  }
   },
   "timeLimitedVisibility": {
     "hero": {

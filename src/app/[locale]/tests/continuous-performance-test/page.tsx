@@ -47,8 +47,25 @@ export default function CPTTest() {
   const [testStartTime, setTestStartTime] = useState<number>(0)
   const [showEmbedDialog, setShowEmbedDialog] = useState(false)
   const [embedUrl, setEmbedUrl] = useState('')
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true)
+  const [showTutorial, setShowTutorial] = useState(true)
+  const [selectedDuration, setSelectedDuration] = useState(120000) // 默认2分钟
+  
+  // Add sound refs
+  const correctSoundRef = useRef<HTMLAudioElement | null>(null)
+  const wrongSoundRef = useRef<HTMLAudioElement | null>(null)
 
-  const testDuration = 300000 // 5 minutes in milliseconds
+  // 修改测试时长常量为动态值
+  const testDuration = selectedDuration
+  
+  // 定义可选的测试时长
+  const durationOptions = [
+    { value: 60000, label: '1 min' },
+    { value: 120000, label: '2 min' },
+    { value: 180000, label: '3 min' },
+    { value: 300000, label: '5 min' }
+  ]
+
   const stimulusDuration = 500 // Changed to 500ms
   const interStimulusInterval = 1000 // time between stimuli
 
@@ -56,23 +73,45 @@ export default function CPTTest() {
   const targetLetter = 'X'
 
   const t = useTranslations('cpt')
-  const te = useTranslations('embed')
 
   const intervalsRef = useRef<{
     stimulus?: NodeJS.Timeout;
     progress?: NodeJS.Timeout;
   }>({})
 
-  const startTest = () => {
-    setTestStartTime(Date.now());
-    console.log('Test started')
-    if (intervalsRef.current.stimulus) {
-      clearInterval(intervalsRef.current.stimulus)
-    }
-    if (intervalsRef.current.progress) {
-      clearInterval(intervalsRef.current.progress)
-    }
+  // Initialize audio
+  useEffect(() => {
+    const soundPreference = localStorage.getItem('cptTestSoundEnabled')
+    setIsSoundEnabled(soundPreference !== 'false')
 
+    correctSoundRef.current = new Audio('/sounds/correct.mp3')
+    wrongSoundRef.current = new Audio('/sounds/wrong.mp3')
+
+    const audioElements = [correctSoundRef, wrongSoundRef]
+    audioElements.forEach(ref => {
+      if (ref.current) {
+        ref.current.volume = 0.5
+      }
+    })
+  }, [])
+
+  // Sound utility function
+  const playSound = (soundRef: React.RefObject<HTMLAudioElement>) => {
+    if (isSoundEnabled && soundRef.current) {
+      soundRef.current.currentTime = 0
+      soundRef.current.play().catch(e => console.log('Audio play failed:', e))
+    }
+  }
+
+  // Toggle sound function
+  const toggleSound = () => {
+    const newState = !isSoundEnabled
+    setIsSoundEnabled(newState)
+    localStorage.setItem('cptTestSoundEnabled', newState.toString())
+  }
+
+  const startTest = () => {
+    setTestStartTime(Date.now())
     setGameState('test')
     setResults({
       correctResponses: 0,
@@ -83,6 +122,7 @@ export default function CPTTest() {
     })
     setReactionTimes([])
     setProgress(0)
+    setPeriodStats([])
 
     const startTime = Date.now()
     intervalsRef.current.progress = setInterval(() => {
@@ -177,6 +217,7 @@ export default function CPTTest() {
     })
     
     if (currentDisplayedLetter === targetLetter && reactionTime <= stimulusDuration) {
+      playSound(correctSoundRef)
       // 正确响应
       console.log('Recording correct response for:', currentDisplayedLetter)
       setResults(prev => {
@@ -190,6 +231,7 @@ export default function CPTTest() {
       })
       setReactionTimes(prev => [...prev, reactionTime])
     } else if (currentDisplayedLetter !== '') {
+      playSound(wrongSoundRef)
       // 错误响应（虚报）或超时
       console.log('Recording commission error for:', currentDisplayedLetter, 'reactionTime:', reactionTime)
       setResults(prev => {
@@ -202,7 +244,7 @@ export default function CPTTest() {
         return newResults;
       })
     }
-  }, [gameState, currentLetter, lastStimulusTime, testStartTime]);
+  }, [gameState, currentLetter, lastStimulusTime, testStartTime, targetLetter, stimulusDuration]);
 
   const endTest = () => {
     if (intervalsRef.current.stimulus) {
@@ -302,119 +344,6 @@ export default function CPTTest() {
     }
   }, [isIframe, gameState, results])
 
-  // 在客户端获取 URL
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setEmbedUrl(`${window.location.origin}${window.location.pathname}?embed=true`)
-    }
-  }, [])
-
-  // 复制链接到剪贴板
-  const copyEmbedCode = async () => {
-    const embedCode = `<iframe src="${embedUrl}" width="100%" height="600" frameborder="0"></iframe>`
-    try {
-      await navigator.clipboard.writeText(embedCode)
-      toast.success(te('codeCopied'))
-    } catch (err) {
-      toast.error(te('copyError'))
-    }
-  }
-
-  // 在开始和结果页面显示嵌入按钮
-  const renderEmbedButton = () => {
-    if (gameState === 'test') return null;
-    
-    return (
-      <Button
-        variant="outline"
-        className="absolute top-4 right-4"
-        onClick={() => setShowEmbedDialog(true)}
-      >
-        <i className="fas fa-code mr-2" />
-        {te('button')}
-      </Button>
-    );
-  }
-
-  // iframe 模式下只渲染测试区域
-  if (isIframe) {
-    return (
-      <div className="w-full">
-        <div className="banner w-full min-h-[550px] flex flex-col justify-center items-center bg-blue-theme text-white relative">
-          {gameState === 'start' && (
-            <div className='flex flex-col justify-center items-center'>
-              <i className="fas fa-bullseye text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
-              <h1 className="text-4xl font-bold text-center mb-4">{t('h1')}</h1>
-              <p className="text-lg text-center mb-20">
-                {t('description')}<br />
-                {t('duration')}
-              </p>
-              <div className="flex gap-4">
-                <Button 
-                  onClick={startTest}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3"
-                >
-                  {t('startButton')}
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {gameState === 'test' && (
-            <div className="flex items-center justify-center h-full">
-              {/* 测试内容 */}
-              {currentLetter && (
-                <div 
-                  className="text-9xl cursor-pointer"
-                  onClick={handleClick}
-                >
-                  {currentLetter}
-                </div>
-              )}
-            </div>
-          )}
-
-          {gameState === 'result' && (
-            <div className='flex flex-col justify-center items-center max-w-2xl mx-auto p-8 bg-white/10 rounded-xl backdrop-blur-sm'>
-              <h2 className="text-4xl font-bold mb-8">{t('results')}</h2>
-              <div className="w-full grid grid-cols-2 gap-4">
-                <div className="flex justify-between items-center p-4 bg-white/5 rounded-lg">
-                  <span>{t('correctResponses')}:</span>
-                  <span className="font-bold text-xl">{results.correctResponses}</span>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-white/5 rounded-lg">
-                  <span>{t('omissionErrors')}:</span>
-                  <span className="font-bold text-xl">{results.omissionErrors}</span>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-white/5 rounded-lg">
-                  <span>{t('commissionErrors')}:</span>
-                  <span className="font-bold text-xl">{results.commissionErrors}</span>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-white/5 rounded-lg">
-                  <span>{t('averageReactionTime')}:</span>
-                  <span className="font-bold text-xl">{Math.round(results.averageReactionTime)}ms</span>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-white/5 rounded-lg col-span-2">
-                  <span>{t('accuracyRate')}:</span>
-                  <span className="font-bold text-xl">
-                    {((results.correctResponses / results.totalTrials) * 100).toFixed(1)}%
-                  </span>
-                </div>
-              </div>
-              <div className="flex gap-4 mt-8">
-                <Button 
-                  onClick={() => setGameState('start')}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3"
-                >
-                  {t('tryAgain')}
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    )
-  }
 
   // 完整模式下渲染所有内容
   return (
@@ -470,10 +399,29 @@ export default function CPTTest() {
             <div className='flex flex-col justify-center items-center'>
               <i className="fas fa-bullseye text-9xl text-white mb-8 animate-fade cursor-pointer"></i>
               <h1 className="text-4xl font-bold text-center mb-4">{t('h1')}</h1>
-              <p className="text-lg text-center mb-20">
+              <p className="text-lg text-center mb-8">
                 {t('description')}<br />
-                {t('duration')}
               </p>
+
+              {/* Duration selector */}
+              <div className="flex flex-col items-center gap-4 mb-12">
+                <h2 className="text-xl font-semibold">{t('selectDuration')}</h2>
+                <div className="flex gap-3">
+                  {durationOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => setSelectedDuration(option.value)}
+                      className={`px-4 py-2 rounded-lg transition-colors duration-200
+                        ${selectedDuration === option.value 
+                          ? 'bg-white text-blue-600 font-semibold' 
+                          : 'bg-white/10 hover:bg-white/20'}`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="flex gap-4">
                 <Button 
                   onClick={startTest}
@@ -481,7 +429,6 @@ export default function CPTTest() {
                 >
                   {t('startButton')}
                 </Button>
-               
               </div>
             </div>
           )}
@@ -532,6 +479,12 @@ export default function CPTTest() {
                     {((results.correctResponses / results.totalTrials) * 100).toFixed(1)}%
                   </span>
                 </div>
+                <div className="flex justify-between items-center p-4 bg-white/5 rounded-lg col-span-2">
+                  <span>{t('testDuration')}:</span>
+                  <span className="font-bold text-xl">
+                    {selectedDuration / 60000} {t('minutes')}
+                  </span>
+                </div>
               </div>
               <div className="flex gap-4 mt-8">
                 <Button 
@@ -539,14 +492,6 @@ export default function CPTTest() {
                   className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3"
                 >
                   {t('tryAgain')}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="px-6 py-3"
-                  onClick={() => setShowEmbedDialog(true)}
-                >
-                  <i className="fas fa-code mr-2" />
-                  {te('button')}
                 </Button>
               </div>
             </div>
@@ -717,7 +662,93 @@ export default function CPTTest() {
         </div>
       </section>
 
-      
+      {/* Add control buttons */}
+      <div className="fixed top-[calc(65px+1rem)] left-4 z-[100]">
+        <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full border border-white/20 p-1">
+          <button
+            onClick={() => setShowTutorial(true)}
+            className="w-8 h-8 rounded-full hover:bg-white/20 
+                     flex items-center justify-center transition-all duration-200 
+                     text-white"
+            title={t("tutorial.help")}
+          >
+            <i className="fas fa-question-circle text-lg"></i>
+          </button>
+          
+          <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
+
+          <button
+            onClick={toggleSound}
+            className="w-8 h-8 rounded-full hover:bg-white/20
+                     flex items-center justify-center transition-all duration-200 
+                     text-white"
+            title={isSoundEnabled ? t("sound.disable") : t("sound.enable")}
+          >
+            <i className={`fas ${isSoundEnabled ? 'fa-volume-up' : 'fa-volume-mute'} text-lg`}></i>
+          </button>
+        </div>
+      </div>
+
+      {/* Add tutorial overlay */}
+      {showTutorial && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div 
+            className="backdrop-blur-sm bg-black/30 absolute inset-0" 
+            onClick={() => setShowTutorial(false)} 
+          />
+          <div className="relative bg-white/90 dark:bg-gray-800/90 p-6 rounded-xl shadow-xl max-w-md mx-4">
+            <button 
+              onClick={() => setShowTutorial(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+            >
+              <i className="fas fa-times text-xl"></i>
+            </button>
+            
+            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+              <i className="fas fa-bullseye text-blue-500"></i>
+              {t("tutorial.howToPlay")}
+            </h3>
+            
+            <ol className="list-decimal list-inside space-y-3 text-gray-700 dark:text-gray-300">
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-blue-500">
+                  <i className="fas fa-eye w-6"></i>
+                </span>
+                {t("tutorial.step1")} {/* 注意屏幕上显示的字母 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-purple-500">
+                  <i className="fas fa-keyboard w-6"></i>
+                </span>
+                {t("tutorial.step2")} {/* 当看到字母 'X' 时按空格键 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-green-500">
+                  <i className="fas fa-clock w-6"></i>
+                </span>
+                {t("tutorial.step3")} {/* 保持专注，测试持续5分钟 */}
+              </li>
+              <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+                <span className="text-yellow-500">
+                  <i className="fas fa-chart-line w-6"></i>
+                </span>
+                {t("tutorial.step4")} {/* 测试结束后查看详细分析 */}
+              </li>
+            </ol>
+
+            <div className="mt-6 flex justify-end">
+              <button 
+                onClick={() => setShowTutorial(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                         transition-colors duration-200 flex items-center gap-2"
+              >
+                <i className="fas fa-check"></i>
+                {t("tutorial.gotIt")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 } 
