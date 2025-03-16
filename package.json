@@ -29,6 +29,7 @@
     "cmdk": "1.0.0",
     "cookie": "^0.7.0",
     "date-fns": "^3.6.0",
+    "framer-motion": "^12.5.0",
     "gray-matter": "^4.0.3",
     "html2canvas": "^1.4.1",
     "jsonc-parser": "^3.3.1",

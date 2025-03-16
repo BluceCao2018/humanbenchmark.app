@@ -533,6 +533,24 @@
     "aboutTitle": "About Audio Reaction Time Test",
     "about": "The Audio Reaction Time Test measures how quickly you can respond to an auditory stimulus. This test is particularly relevant for musicians, sound engineers, and anyone who needs to react quickly to audio cues. The average audio reaction time is typically between 150-300 milliseconds."
   },
+  "gyroscope": {
+    "tapToStart": "Tap to Start",
+    "keepPhoneLevel": "Keep your phone level and try to maintain balance",
+    "deviceNotSupported": "Device Not Supported",
+    "needGyroscope": "This test requires a device with a gyroscope sensor",
+    "desktopNotSupported": "Desktop Not Supported",
+    "pleaseUsePhone": "Please use a mobile phone or tablet to take this test",
+    "permissionDenied": "Permission Required",
+    "needPermission": "Please allow access to device orientation to play this game",
+    "requestPermission": "Request Permission",
+    "permissionDeniedHelp": "Permission was denied. Please follow these steps to enable:\n1. Open Settings\n2. Find Safari\n3. Find this website\n4. Allow Motion & Orientation Access",
+    "openSettings": "Open Settings",
+    "score": "Score",
+    "time": "Time",
+    "finalScore": "Final Score",
+    "bestScore": "Best Score",
+    "playAgain": "Play Again"
+  },
   "perfectPitch": {
     "meta_title": "Free Perfect Pitch Test Online | Human Benchmark Test",
     "meta_description": "Test your ability to identify musical notes by ear",
