@@ -2,7 +2,7 @@
 import React from 'react'; // 确保导入 React
 import { useState, useEffect } from 'react'
 import { Link, usePathname }from "@/lib/i18n";
-import { Github, MenuIcon } from 'lucide-react'
+import { Github, MenuIcon, Zap, Brain, Target, Calculator, Mouse, Headphones } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -187,15 +187,63 @@ export const Navigation = ({ categories }: navigationProp ) => {
                     </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem> */}
-                {/* <NavigationMenuItem>
-                  <Link href="/about" legacyBehavior passHref>
-                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'font-medium', '/about' === pathname && "font-extrabold")}>
-                      {t('aboutBtn')}
+                <NavigationMenuItem>
+                  <Link href="/tests/reactiontime" legacyBehavior passHref>
+                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'font-medium', '/tests/reactiontime' === pathname && "font-extrabold text-blue-500")}>
+                      <Zap className={cn("mr-2 h-4 w-4", '/tests/reactiontime' === pathname && "text-blue-500")} />
+                      Reaction Time
                     </NavigationMenuLink>
                   </Link>
-                </NavigationMenuItem> */}
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Link href="/tests/sequence" legacyBehavior passHref>
+                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'font-medium', '/tests/sequence' === pathname && "font-extrabold text-blue-500")}>
+                      <Brain className={cn("mr-2 h-4 w-4", '/tests/sequence' === pathname && "text-blue-500")} />
+                      Sequence Memory
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Link href="/tests/aim" legacyBehavior passHref>
+                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'font-medium', '/tests/aim' === pathname && "font-extrabold text-blue-500")}>
+                      <Target className={cn("mr-2 h-4 w-4", '/tests/aim' === pathname && "text-blue-500")} />
+                      Aim Trainer
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Link href="/tests/number-memory" legacyBehavior passHref>
+                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'font-medium', '/tests/number-memory' === pathname && "font-extrabold text-blue-500")}>
+                      <Calculator className={cn("mr-2 h-4 w-4", '/tests/number-memory' === pathname && "text-blue-500")} />
+                      Number Memory
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Link href="/tests/chimp" legacyBehavior passHref>
+                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'font-medium', '/tests/chimp' === pathname && "font-extrabold text-blue-500")}>
+                      <Mouse className={cn("mr-2 h-4 w-4", '/tests/chimp' === pathname && "text-blue-500")} />
+                      Chimp Test
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <Link href="/tests/audio-reaction-time" legacyBehavior passHref>
+                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'font-medium', '/tests/audio-reaction-time' === pathname && "font-extrabold text-blue-500")}>
+                      <Headphones className={cn("mr-2 h-4 w-4", '/tests/audio-reaction-time' === pathname && "text-blue-500")} />
+                      Audio Reaction
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+
               </NavigationMenuList>
             </NavigationMenu>
+            
           </nav>
         </div>
         <div className="flex items-center gap-3">
