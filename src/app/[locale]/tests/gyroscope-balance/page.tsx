@@ -150,7 +150,17 @@ export default function GyroscopeBalance() {
   }
 
   const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
-    if (gameState.status !== 'playing') return
+    // 添加调试日志
+    console.log('Device orientation event:', {
+      status: gameState.status,
+      beta: event.beta,
+      gamma: event.gamma
+    })
+    
+    if (gameState.status !== 'playing') {
+      console.log('Game not in playing state, ignoring orientation event')
+      return
+    }
     
     // 确保陀螺仪数据有效
     if (event.beta === null || event.gamma === null) {
@@ -165,6 +175,9 @@ export default function GyroscopeBalance() {
     const maxTilt = 45
     const newX = (gamma / maxTilt) * 150
     const newY = ((beta - 90) / maxTilt) * 150
+    
+    // 添加调试日志
+    console.log('Ball position:', { newX, newY })
     
     ballX.set(newX)
     ballY.set(newY)
@@ -200,7 +213,20 @@ export default function GyroscopeBalance() {
   };
 
   const initializeGame = () => {
+    console.log('Initializing game...')
     scoreRef.current = 0
+    
+    // 先移除可能存在的旧事件监听器
+    window.removeEventListener('deviceorientation', handleDeviceOrientation)
+    if (timerRef.current) {
+      clearInterval(timerRef.current)
+    }
+    
+    // 重置球的位置
+    ballX.set(0)
+    ballY.set(0)
+    
+    // 更新游戏状态
     setGameState(prev => ({
       ...prev,
       status: 'playing',
@@ -208,12 +234,16 @@ export default function GyroscopeBalance() {
       timeRemaining: 30
     }))
 
+    // 添加新的事件监听器
+    console.log('Adding device orientation event listener...')
     window.addEventListener('deviceorientation', handleDeviceOrientation)
     
     // 开始倒计时
+    console.log('Starting game timer...')
     timerRef.current = setInterval(() => {
       setGameState(prev => {
         if (prev.timeRemaining <= 1) {
+          console.log('Game finished!')
           clearInterval(timerRef.current!)
           window.removeEventListener('deviceorientation', handleDeviceOrientation)
           return {
