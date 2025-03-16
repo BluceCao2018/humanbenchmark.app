@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useTranslations } from 'next-intl'
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Image from 'next/image'
@@ -16,6 +16,8 @@ export default function ChimpTest() {
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([])
   const [currentTarget, setCurrentTarget] = useState(4)
   const [level, setLevel] = useState(1)
+  const [showTutorial, setShowTutorial] = useState(true)
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true)
 
   const t =  useTranslations('climp');
   const te = useTranslations('embed');
@@ -24,6 +26,41 @@ export default function ChimpTest() {
   const isIframe = searchParams.get('embed') === 'true';
   const [showEmbedDialog, setShowEmbedDialog] = useState(false);
   const [embedUrl, setEmbedUrl] = useState('');
+
+  // Add sound refs
+  const correctSoundRef = useRef<HTMLAudioElement | null>(null)
+  const wrongSoundRef = useRef<HTMLAudioElement | null>(null)
+
+  // Initialize audio
+  useEffect(() => {
+    const soundPreference = localStorage.getItem('chimpTestSoundEnabled')
+    setIsSoundEnabled(soundPreference !== 'false')
+
+    correctSoundRef.current = new Audio('/sounds/correct.mp3')
+    wrongSoundRef.current = new Audio('/sounds/wrong.mp3')
+
+    const audioElements = [correctSoundRef, wrongSoundRef]
+    audioElements.forEach(ref => {
+      if (ref.current) {
+        ref.current.volume = 0.5
+      }
+    })
+  }, [])
+
+  // Sound utility function
+  const playSound = (soundRef: React.RefObject<HTMLAudioElement>) => {
+    if (isSoundEnabled && soundRef.current) {
+      soundRef.current.currentTime = 0
+      soundRef.current.play().catch(e => console.log('Audio play failed:', e))
+    }
+  }
+
+  // Toggle sound function
+  const toggleSound = () => {
+    const newState = !isSoundEnabled
+    setIsSoundEnabled(newState)
+    localStorage.setItem('chimpTestSoundEnabled', newState.toString())
+  }
 
   const generateSequence = (gridSize:number,currentTarget:number) => {
     const totalCells = gridSize * gridSize
@@ -66,32 +103,28 @@ export default function ChimpTest() {
 
   const handleClick = (number: number | null) => {
     if (!number) return
-    // 使用 newSelectedNumbers 来判断
     const newSelectedNumbers = [...selectedNumbers, number]
     const expectedNumber = selectedNumbers.length + 1
 
     if (number === expectedNumber) {
+      playSound(correctSoundRef) // 正确时播放音效
       setSelectedNumbers(newSelectedNumbers)
-      setGameState('playing')  // 第一次点击正确后切换到 playing 状态
+      setGameState('playing')
       
-      // 使用 newSelectedNumbers.length 来判断是否完成
       if (newSelectedNumbers.length === currentTarget) {
-        const nextLevel = level + 1  // 先计算新的 level
-        const nextCurrentTarget=currentTarget+1
+        const nextLevel = level + 1
+        const nextCurrentTarget = currentTarget + 1
         setLevel(nextLevel)
         setCurrentTarget(nextCurrentTarget)
         const newGridSize = getGridSizeForLevel(nextLevel)
         setGridSize(newGridSize)
         setSelectedNumbers([])
-        setSequence(generateSequence(newGridSize,nextCurrentTarget))
+        setSequence(generateSequence(newGridSize, nextCurrentTarget))
         setGameState('show')
       }
     } else {
+      playSound(wrongSoundRef) // 错误时播放音效
       setGameState('result')
-      // setLevel(2)
-      // setCurrentTarget(4)
-      // setSelectedNumbers([])
-      // setSequence(generateSequence(3,4))
     }
   }
 
@@ -268,23 +301,73 @@ export default function ChimpTest() {
           )}
 
           {gameState === 'result' && (
-            <div className='flex flex-col justify-center items-center'>
-              <i className="fas fa-brain text-9xl text-white mb-8 animate-fade cursor-pointer" ></i>
-              <h2 className="text-2xl font-bold mb-4">{t("score")}</h2>
-              <p className="text-6xl font-bold mb-4">{currentTarget} </p>
-              <button 
-                onClick={() => {
-                  setGameState('start')
-                  setGridSize(3)
-                  setLevel(1)
-                  setCurrentTarget(4)
-                  setSelectedNumbers([])
-                  setSequence(generateSequence(3,4))
-                }}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
-              >
-                {t('tryAgain')}
-              </button>
+            <div className="text-center text-white">
+              <i className="fas fa-brain text-9xl text-white mb-8 animate-fade"></i>
+              
+              {/* 统计卡片网格 */}
+              <div className="grid grid-cols-2 gap-4 max-w-xl mx-auto mb-8">
+                {/* 当前等级 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-layer-group mr-2"></i>
+                    {t("stats.level")}
+                  </div>
+                  <div className="text-4xl font-bold">
+                    {level}
+                  </div>
+                </div>
+
+                {/* 网格大小 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-th mr-2"></i>
+                    {t("stats.gridSize")}
+                  </div>
+                  <div className="text-4xl font-bold">
+                    {gridSize}x{gridSize}
+                  </div>
+                </div>
+
+                {/* 数字数量 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-hashtag mr-2"></i>
+                    {t("stats.numbers")}
+                  </div>
+                  <div className="text-4xl font-bold">
+                    {currentTarget}
+                  </div>
+                </div>
+
+                {/* 准确率 */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="text-xl mb-2">
+                    <i className="fas fa-bullseye mr-2"></i>
+                    {t("stats.accuracy")}
+                  </div>
+                  <div className="text-4xl font-bold">
+                    {((selectedNumbers.length / currentTarget) * 100).toFixed(1)}%
+                  </div>
+                </div>
+              </div>
+
+              {/* 操作按钮 */}
+              <div className="flex justify-center gap-4">
+                <button 
+                  onClick={() => {
+                    setGameState('start')
+                    setGridSize(3)
+                    setLevel(1)
+                    setCurrentTarget(4)
+                    setSelectedNumbers([])
+                    setSequence(generateSequence(3,4))
+                  }}
+                  className="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                >
+                  <i className="fas fa-redo"></i>
+                  {t("tryAgain")}
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -376,6 +459,94 @@ export default function ChimpTest() {
 
   </div>
   </div>
+
+  {/* Add control buttons */}
+  <div className="fixed top-[calc(65px+1rem)] left-4 z-[100]">
+    <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full border border-white/20 p-1">
+      <button
+        onClick={() => setShowTutorial(true)}
+        className="w-8 h-8 rounded-full hover:bg-white/20 
+                 flex items-center justify-center transition-all duration-200 
+                 text-white"
+        title={t("tutorial.help")}
+      >
+        <i className="fas fa-question-circle text-lg"></i>
+      </button>
+      
+      <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
+
+      <button
+        onClick={toggleSound}
+        className="w-8 h-8 rounded-full hover:bg-white/20
+                 flex items-center justify-center transition-all duration-200 
+                 text-white"
+        title={isSoundEnabled ? t("sound.disable") : t("sound.enable")}
+      >
+        <i className={`fas ${isSoundEnabled ? 'fa-volume-up' : 'fa-volume-mute'} text-lg`}></i>
+      </button>
+    </div>
+  </div>
+
+  {/* Add tutorial overlay */}
+  {showTutorial && (
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div 
+        className="backdrop-blur-sm bg-black/30 absolute inset-0" 
+        onClick={() => setShowTutorial(false)} 
+      />
+      <div className="relative bg-white/90 dark:bg-gray-800/90 p-6 rounded-xl shadow-xl max-w-md mx-4 animate-fade-in">
+        <button 
+          onClick={() => setShowTutorial(false)}
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+        >
+          <i className="fas fa-times text-xl"></i>
+        </button>
+        
+        <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+          <i className="fas fa-brain text-blue-500"></i>
+          {t("tutorial.howToPlay")}
+        </h3>
+        
+        <ol className="list-decimal list-inside space-y-3 text-gray-700 dark:text-gray-300">
+          <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+            <span className="text-blue-500">
+              <i className="fas fa-eye w-6"></i>
+            </span>
+            {t("tutorial.step1")} {/* 记住数字的位置 */}
+          </li>
+          <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+            <span className="text-purple-500">
+              <i className="fas fa-sort-numeric-up w-6"></i>
+            </span>
+            {t("tutorial.step2")} {/* 按顺序点击数字 */}
+          </li>
+          <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+            <span className="text-green-500">
+              <i className="fas fa-expand w-6"></i>
+            </span>
+            {t("tutorial.step3")} {/* 随着等级提升，格子会变多 */}
+          </li>
+          <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-black/5">
+            <span className="text-yellow-500">
+              <i className="fas fa-plus w-6"></i>
+            </span>
+            {t("tutorial.step4")} {/* 数字也会逐渐增加 */}
+          </li>
+        </ol>
+
+        <div className="mt-6 flex justify-end">
+          <button 
+            onClick={() => setShowTutorial(false)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                     transition-colors duration-200 flex items-center gap-2"
+          >
+            <i className="fas fa-check"></i>
+            {t("tutorial.gotIt")}
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
   </>
   )
 } 

@@ -312,7 +312,26 @@
     "tryAgain":"Try again",
     "statisticsTitle": "Chimpanzee Test Statistics",
     "aboutTitle": "About Chimpanzee Test",
-    "about":"Chimpanzee Test is a test of working memory, made famous by a study that found that chimpanzees consistently outperform humans on this task.<br/>In the study, the chimps consistently outperformed humans, and some chimps were able to remember 9 digits over 90% of the time.<br/>This Chimpanzee Test is a variant of that concept, that gets increasingly difficult every turn, starting at 4 digits, and adding one every turn. If you pass a level, the number increases. If you fail, you get a strike. Three strikes and the test is over."
+    "about":"Chimpanzee Test is a test of working memory, made famous by a study that found that chimpanzees consistently outperform humans on this task.<br/>In the study, the chimps consistently outperformed humans, and some chimps were able to remember 9 digits over 90% of the time.<br/>This Chimpanzee Test is a variant of that concept, that gets increasingly difficult every turn, starting at 4 digits, and adding one every turn. If you pass a level, the number increases. If you fail, you get a strike. Three strikes and the test is over.",
+    "tutorial": {
+    "help": "Show Help",
+    "howToPlay": "How to Play Chimp Test",
+    "step1": "Remember the positions of the numbers",
+    "step2": "Click the numbers in order (1,2,3...)",
+    "step3": "Grid size increases with level",
+    "step4": "More numbers will be added",
+    "gotIt": "Got it!"
+  },
+  "sound": {
+    "enable": "Enable Sound",
+    "disable": "Disable Sound"
+  },
+  "stats": {
+    "level": "Level",
+    "gridSize": "Grid Size",
+    "numbers": "Numbers",
+    "accuracy": "Accuracy"
+  }
   },
   "typing": {
     "meta_title": "Free Typing Online | Human Benchmark Test | Typing test",
