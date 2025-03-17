@@ -84,11 +84,11 @@ export default function ChimpTest() {
     setSelectedNumbers([])
     setCurrentTarget(4)
     setGameState('show')
-
-    // 显示数字后隐藏
-    // setTimeout(() => {
-    //   setGameState('play')
-    // }, 2000)
+    
+    // 显示数字2秒后开始游戏
+    setTimeout(() => {
+      setGameState('play')
+    }, 2000)
   }
 
   const getGridSizeForLevel = (level: number) => {
@@ -130,15 +130,6 @@ export default function ChimpTest() {
 
   console.log('gameState:', gameState)
   console.log('sequence:', sequence)
-
-  useEffect(() => {
-    if (gameState === 'start') {
-      // 显示数字一段时间后开始游戏
-      setTimeout(() => {
-        setGameState('play')
-      }, 3000)
-    }
-  }, [gameState])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
