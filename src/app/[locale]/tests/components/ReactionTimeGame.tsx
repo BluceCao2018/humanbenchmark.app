@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 // Types
 type GameState = 'waiting' | 'ready' | 'toosoon' | 'testing' | 'result' | 'final'
@@ -8,10 +9,14 @@ type GameState = 'waiting' | 'ready' | 'toosoon' | 'testing' | 'result' | 'final
 interface ReactionTimeGameProps {
   onResultUpdate?: (time: number) => void
   onShareOpen?: () => void
+  showTutorial?: boolean
 }
 
 // Custom Hook
-function useReactionGame(onResultUpdate?: (time: number) => void) {
+function useReactionGame(
+  onResultUpdate?: (time: number) => void,
+  playSound?: (type: 'success' | 'error') => void
+) {
   const t = useTranslations('reactionTime')
   const [gameState, setGameState] = useState<GameState>('waiting')
   const [startTime, setStartTime] = useState(0)
@@ -116,6 +121,7 @@ function useReactionGame(onResultUpdate?: (time: number) => void) {
 
     switch (gameState) {
       case 'ready':
+        playSound?.('error')
         setGameState('toosoon')
         break
       case 'toosoon':
@@ -125,6 +131,8 @@ function useReactionGame(onResultUpdate?: (time: number) => void) {
         const endTime = Date.now()
         const time = endTime - startTime - (endTime - clearTime)
         setReactionTime(time)
+        
+        playSound?.('success')
         
         const newAttempts = [...attempts, time]
         setAttempts(newAttempts)
@@ -164,7 +172,7 @@ function useReactionGame(onResultUpdate?: (time: number) => void) {
       default:
         handleStart()
     }
-  }, [gameState, startTime, attempts, averageTime, handleStart, startImmediately])
+  }, [gameState, startTime, attempts, averageTime, handleStart, startImmediately, playSound])
 
   // 添加状态监听
   useEffect(() => {
@@ -246,9 +254,52 @@ const MobileProgressIndicator = ({ attempts }: { attempts: number[] }) => {
   )
 }
 
+// 在组件外部创建音频对象
+const successSound = typeof Audio !== 'undefined' ? new Audio('/sounds/correct.mp3') : null;
+const errorSound = typeof Audio !== 'undefined' ? new Audio('/sounds/wrong.mp3') : null;
+
 // Main Component
-export default function ReactionTimeGame({ onResultUpdate, onShareOpen }: ReactionTimeGameProps) {
+export default function ReactionTimeGame({ 
+  onResultUpdate, 
+  onShareOpen, 
+  showTutorial = true  // 默认为 true
+}: ReactionTimeGameProps) {
   const t = useTranslations('reactionTime')
+  const [showTutorialDialog, setShowTutorialDialog] = useState(showTutorial)
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true)
+
+  // 初始化偏好设置
+  useEffect(() => {
+    const tutorialSeen = localStorage.getItem('reactionTimeTutorialSeen')
+    const soundPreference = localStorage.getItem('reactionTimeSoundEnabled')
+    setShowTutorialDialog(showTutorial && !tutorialSeen)
+    setIsSoundEnabled(soundPreference !== 'false')
+  }, [showTutorial])
+
+  // 完成教程
+  const completeTutorial = () => {
+    setShowTutorialDialog(false)
+    localStorage.setItem('reactionTimeTutorialSeen', 'true')
+  }
+
+  // 切换声音
+  const toggleSound = () => {
+    const newState = !isSoundEnabled
+    setIsSoundEnabled(newState)
+    localStorage.setItem('reactionTimeSoundEnabled', newState.toString())
+  }
+
+  // 播放声音的函数
+  const playSound = useCallback((type: 'success' | 'error') => {
+    if (!isSoundEnabled) return;
+    
+    const sound = type === 'success' ? successSound : errorSound;
+    if (sound) {
+      sound.currentTime = 0;
+      sound.play().catch(err => console.log('音频播放失败:', err));
+    }
+  }, [isSoundEnabled]);
+
   const {
     gameState,
     reactionTime,
@@ -262,8 +313,8 @@ export default function ReactionTimeGame({ onResultUpdate, onShareOpen }: Reacti
     handleStart,
     getGameStateMessage,
     cleanup,
-    startImmediately,
-  } = useReactionGame(onResultUpdate)
+    startImmediately
+  } = useReactionGame(onResultUpdate, playSound)
 
   useEffect(() => {
     return cleanup
@@ -272,74 +323,159 @@ export default function ReactionTimeGame({ onResultUpdate, onShareOpen }: Reacti
   const { message, description, icon } = getGameStateMessage()
 
   return (
-    <div 
-      className={`
-        relative banner w-full h-[550px] flex flex-col justify-center items-center 
-        ${gameState === 'testing' ? '!bg-green-500 hover:!bg-green-600' : 
-          gameState === 'ready' ? '!bg-red-500' : 
-          'bg-blue-theme'}
-        transition-all duration-300 cursor-pointer user-select-none
-      `} 
-      onClick={handleClick}
-    >
-      {/* 根据屏幕尺寸显示不同的进度指示器 */}
-      {gameState !== 'waiting' && (
-        <>
-          <DesktopProgressIndicator attempts={attempts} />
-          <MobileProgressIndicator attempts={attempts} />
-        </>
+    <>
+      {/* 控制按钮 */}
+      <div className="fixed top-[calc(65px+1rem)] left-4 z-[100]">
+        <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full border border-white/20 p-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowTutorialDialog(true);
+            }}
+            className="w-8 h-8 rounded-full hover:bg-white/20 
+                     flex items-center justify-center transition-all duration-200 
+                     text-white"
+            title={t("tutorial.help")}
+          >
+            <i className="fas fa-question-circle text-lg"></i>
+          </button>
+          
+          <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleSound();
+            }}
+            className="w-8 h-8 rounded-full hover:bg-white/20
+                     flex items-center justify-center transition-all duration-200 
+                     text-white"
+            title={isSoundEnabled ? t("sound.disable") : t("sound.enable")}
+          >
+            <i className={`fas ${isSoundEnabled ? 'fa-volume-up' : 'fa-volume-mute'} text-lg`}></i>
+          </button>
+        </div>
+      </div>
+
+      {/* 教程对话框 */}
+      {showTutorialDialog && (
+        <Dialog open={showTutorialDialog} onOpenChange={setShowTutorialDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            <div className="relative bg-white rounded-xl p-6">
+              <h3 className="text-xl font-bold mb-4 text-gray-900 flex items-center gap-2">
+                <i className="fas fa-bolt text-blue-500"></i>
+                {t("tutorial.title")}
+              </h3>
+              
+              <div className="space-y-4">
+                {/* 等待步骤 */}
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-red-50">
+                  <div className="w-8 h-8 rounded-full bg-red-100 
+                                flex items-center justify-center">
+                    <i className="fas fa-hand text-red-600"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">{t("tutorial.wait")}</h4>
+                    <p className="text-sm text-gray-600">{t("tutorial.waitDesc")}</p>
+                  </div>
+                </div>
+
+                {/* 点击步骤 */}
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-green-50">
+                  <div className="w-8 h-8 rounded-full bg-green-100 
+                                flex items-center justify-center">
+                    <i className="fas fa-mouse-pointer text-green-600"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">{t("tutorial.click")}</h4>
+                    <p className="text-sm text-gray-600">{t("tutorial.clickDesc")}</p>
+                  </div>
+                </div>
+
+                {/* 结果步骤 */}
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-blue-50">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 
+                                flex items-center justify-center">
+                    <i className="fas fa-chart-line text-blue-600"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">{t("tutorial.results")}</h4>
+                    <p className="text-sm text-gray-600">{t("tutorial.resultsDesc")}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button 
+                  onClick={completeTutorial}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                           transition-colors duration-200 flex items-center gap-2"
+                >
+                  <span>{t("tutorial.start")}</span>
+                  <i className="fas fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
 
-      {/* 主要内容 */}
-      <div className="flex flex-col items-center">
-        <i className={`${icon} text-9xl text-white mb-8 animate-fade`}></i>
-        <h1 
-          className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-4 text-white user-select-none" 
-          dangerouslySetInnerHTML={{ __html: message }} 
-        />
-        <p 
-          className="text-3xl text-center mb-20 text-white user-select-none" 
-          dangerouslySetInnerHTML={{ __html: description?.replace(/\n/g, '<br />') || ''}} 
-        />
-
-       
-
-        {/* 按钮区域 */}
-        {(gameState === 'result' || gameState === 'final') && (
-          <div className="flex gap-4 mt-6" onClick={e => e.stopPropagation()}>
-            <button
-              onClick={() => {
-                if (gameState === 'final') {
-                  // 清空所有状态
-                  setAttempts([])
-                  setReactionTime(0)
-                  setStartTime(0)
-                  setGameState('waiting')
-                } else {
-                  handleClick()
-                }
-              }}
-              className="bg-blue-500 text-white px-6 py-2 rounded-lg 
-                        hover:bg-blue-600 transition-colors duration-200
-                        flex items-center gap-2"
-            >
-              <i className={`fas ${gameState === 'final' ? 'fa-redo' : 'fa-forward'}`}></i>
-              {gameState === 'final' ? t('tryAgain') : t('continue')}
-            </button>
-            {/* {gameState === 'final' && (
-              <button
-                onClick={() => onShareOpen?.()}
-                className="bg-green-500 text-white px-6 py-2 rounded-lg 
-                         hover:bg-green-600 transition-colors duration-200
-                         flex items-center gap-2"
-              >
-                <i className="fas fa-share-alt"></i>
-                {t('share')}
-              </button>
-            )} */}
-          </div>
+      {/* 游戏主界面 */}
+      <div 
+        className={`
+          relative banner w-full h-[550px] flex flex-col justify-center items-center 
+          ${gameState === 'testing' ? '!bg-green-500 hover:!bg-green-600' : 
+            gameState === 'ready' ? '!bg-red-500' : 
+            'bg-blue-theme'}
+          transition-all duration-300 cursor-pointer user-select-none
+        `} 
+        onClick={handleClick}
+      >
+        {/* 进度指示器 */}
+        {gameState !== 'waiting' && (
+          <>
+            <DesktopProgressIndicator attempts={attempts} />
+            <MobileProgressIndicator attempts={attempts} />
+          </>
         )}
+
+        {/* 主要内容 */}
+        <div className="flex flex-col items-center">
+          <i className={`${icon} text-9xl text-white mb-8 animate-fade`}></i>
+          <h1 
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-4 text-white user-select-none" 
+            dangerouslySetInnerHTML={{ __html: message }} 
+          />
+          <p 
+            className="text-3xl text-center mb-20 text-white user-select-none" 
+            dangerouslySetInnerHTML={{ __html: description?.replace(/\n/g, '<br />') || ''}} 
+          />
+
+          {/* 按钮区域 */}
+          {(gameState === 'result' || gameState === 'final') && (
+            <div className="flex gap-4 mt-6" onClick={e => e.stopPropagation()}>
+              <button
+                onClick={() => {
+                  if (gameState === 'final') {
+                    setAttempts([])
+                    setReactionTime(0)
+                    setStartTime(0)
+                    setGameState('waiting')
+                  } else {
+                    handleClick()
+                  }
+                }}
+                className="bg-blue-500 text-white px-6 py-2 rounded-lg 
+                          hover:bg-blue-600 transition-colors duration-200
+                          flex items-center gap-2"
+              >
+                <i className={`fas ${gameState === 'final' ? 'fa-redo' : 'fa-forward'}`}></i>
+                {gameState === 'final' ? t('tryAgain') : t('continue')}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

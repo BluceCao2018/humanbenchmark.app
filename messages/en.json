@@ -177,7 +177,22 @@
       "dragonfly": "Dragonfly",
       "squirrel": "Squirrels",
       "rabbit": "Rabbits"
-    }
+    },
+    "tutorial": {
+    "title": "How to Test Your Reaction Time",
+    "help": "Show Help",
+    "wait": "Wait for Green",
+    "waitDesc": "When you see the red screen, wait for it to turn green",
+    "click": "Click Quickly",
+    "clickDesc": "As soon as the screen turns green, click or press space as fast as you can",
+    "results": "View Results",
+    "resultsDesc": "See your reaction time and try multiple times to get your average",
+    "start": "Start Testing"
+  },
+  "sound": {
+    "enable": "Enable Sound",
+    "disable": "Disable Sound"
+  }
   },
   "sequence": {
     "meta_title": "Free Sequence Memory Test Online ｜ Human Benchmark Test",
