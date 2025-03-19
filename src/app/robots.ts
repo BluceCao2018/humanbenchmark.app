@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: "/tests/gyroscope-balance",
+      disallow: ["/tests/gyroscope-balance",".webp$","woff2$","woff$","ttf$","eot$","svg$"],
     },
     sitemap: `${BASE_URL}/sitemap.xml`,
   };
