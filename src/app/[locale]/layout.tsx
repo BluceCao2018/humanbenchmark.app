@@ -16,6 +16,7 @@ import { getMessages } from 'next-intl/server';
 import { headers } from 'next/headers';
 import { Toaster } from 'sonner'
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { ClarityAnalyticsScript } from '@/components/analytics/ClarityAnalyticsScript';
 
 const inter = Inter({ subsets: ['latin'] })
 const sansFont = DM_Sans({
@@ -83,6 +84,7 @@ export default async function RootLayout({
                 <GoogleAdsenseScript />
                 <GoogleAnalyticsScript />
                 <PlausibleAnalyticsScript />
+                <ClarityAnalyticsScript/>
                 <Toaster 
                   theme="system" 
                   closeButton
