@@ -100,6 +100,15 @@ export function Footer() {
                   About Us
                 </Link>
               </li>
+               <li>
+                <Link 
+                  href="/article/contactus"
+                  className="text-base"
+                  title="contact Human Benchmark"
+                >
+                  Contact Us
+                </Link>
+              </li>
               <li>
                 <Link 
                   href={"mailto:blucecao2024@gmail.com"} 
