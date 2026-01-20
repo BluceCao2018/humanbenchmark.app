@@ -1,14 +1,14 @@
 [
     {
         "name": "Color Perception",
-        "description": "Test your color perception ability.",
+        "description": "Test color discrimination under different lighting/screens.",
         "url": "/tests/color-perception-test",
         "icon":"FaPalette",
         "thumb":"/tools/ColorPerceptionTest.webp"
     },
     {
         "name": "Shades of Gray",
-        "description": "Test your ability to distinguish subtle differences in gray shades",
+        "description": "Spot subtle gray differences—train contrast sensitivity.",
         "url": "/tests/gray-shades-test",
         "icon":"FaAdjust",
         "thumb":"/tools/ShadesofGrayTest.webp"
@@ -22,7 +22,7 @@
     // },
     {
         "name": "Color Blindness",
-        "description": "Test your color vision with this Ishihara-style test",
+        "description": "Ishihara plates test (not a medical diagnosis).",
         "url": "/tests/color-blindness-test",
         "icon":"FaTrafficLight",
         "thumb":"/tools/ColorBlindnessTest.webp"

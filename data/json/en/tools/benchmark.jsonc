@@ -1,14 +1,14 @@
 [
     {
         "name": "Reaction Time Test",
-        "description": "Test your visual reflexes",
+        "description": "Measure visual reaction time in milliseconds",
         "url": "/tests/reactiontime",
         "icon":"FaClock",
         "thumb":"/tools/reactiontimetest.webp"
     },
     {
         "name": "Sequence Memory",
-        "description": "Remember an increasingly long pattern of button presses.",
+        "description": "Repeat growing sequences—how many can you hold?.",
         "url": "/tests/sequence",
         "icon": "FaList",
         "thumb":"/tools/SequenceMemoryTest.webp"
@@ -43,7 +43,7 @@
     },
     {
         "name": "Typing",
-        "description": "How many words per minute can you type?",
+        "description": "Test WPM and accuracy—track your speed over time.",
         "url": "/tests/typing",
         "icon": "FaKeyboard",
         "thumb":"/tools/TypingTest.webp"

@@ -1,14 +1,14 @@
 [
     {
         "name": "Hearing Frequency Range",
-        "description": "Test your hearing frequency range from 20Hz to 20,000Hz",
+        "description": "Estimate hearing age (20Hz–20kHz) in 1 minute.",
         "url": "/tests/hearing-frequency-test",
         "icon":"FaHeadphones",
         "thumb":"/tools/HearingFrequencyRangeTest.webp"
     },
     {
         "name": "Audio Reaction Time",
-        "description": "Click to start and click when you hear the beep",
+        "description": "Typical 140–160ms in healthy adults—check yours.",
         "url": "/tests/audio-reaction-time",
         "icon":"FaVolumeUp",
         "thumb":"/tools/AudioReactionTimeTest.webp"

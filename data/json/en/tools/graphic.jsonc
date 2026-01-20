@@ -1,7 +1,7 @@
 [
     {
         "name": "Face Recognition Test",
-        "description": "Test your face recognition ability.",
+        "description": "est face recognition accuracy with timed rounds.",
         "url": "/tests/face-recognition-test",
         "icon":"FaFaceSmile",
         "thumb":"/tools/FaceRecognitionTest.webp"
