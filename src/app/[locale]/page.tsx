@@ -11,7 +11,7 @@ import { Search } from '@/components/Search';
 import {getTranslations, getLocale} from 'next-intl/server';
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import HomeReactionGame from '@/app/[locale]/tests/components/HomeReactionGame'
+import Hero from '@/app/[locale]/tests/components/Hero'
 import { AllToolsList } from '@/components/ToolsList'
 
 export async function generateMetadata() {
@@ -131,12 +131,12 @@ export default async function Home() {
 
       <div className="w-full mx-auto py-0 space-y-16">
         <section>
-          <HomeReactionGame />
+          <Hero />
         </section>
 
         <div className="container mx-auto py-0 space-y-16">
           {/* Tools Section */}
-          <section className="max-w-7xl mx-auto px-4">
+          <section id='all-tests' className="max-w-7xl mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
               Human Benchmark Tests
             </h2>

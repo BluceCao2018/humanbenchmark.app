@@ -16,11 +16,40 @@
     "copyError": "Copy failed, please copy manually"
   },
   "home": {
-    "meta_title": "Human Benchmark | Free Human Benchmark Tests Online",
-    "meta_description": "Human Benchmark is a professional tool that provides brain games and cognitive tests to help you measure your abilities.",
+    "meta_title": "Human Benchmark Tests (Free Online) | Hearing Age, Reaction, Color",
+    "meta_description": "Play free Human Benchmark tests online: reaction time, memory, hearing frequency (20Hz–20kHz), audio reaction time, and color vision. Instant results.",
     "h2": "Human Benchmark Test",
     "description": "Measure your ability with brain games and cognitive tests on Human Benchmark",
     "homeBtn": "Home"
+  },
+  "hero": {
+    "title": "Human Benchmark Tests (Free Online)",
+    "valueProp": "Hearing frequency (20Hz–20kHz) • Audio reaction time • Color vision • Visual memory • Number memory • Verbal memory • And more",
+    "startTest": "Start a Test",
+    "browseAll": "Browse All Tests",
+    "chooseByGoal": "Choose by Goal",
+    "popularTests": "Popular Tests",
+    "modal": {
+      "title": "Choose a Test"
+    },
+    "tests": {
+      "hearingFrequency": {
+        "name": "Hearing Frequency Range",
+        "description": "Test your hearing range from 20Hz to 20kHz"
+      },
+      "audioReaction": {
+        "name": "Audio Reaction Time",
+        "description": "Measure your reaction time to sound"
+      },
+      "colorBlindness": {
+        "name": "Color Blindness Test",
+        "description": "Check your color vision ability"
+      },
+      "reactionTime": {
+        "name": "Reaction Time Test",
+        "description": "Test your visual reaction speed"
+      }
+    }
   },
   "category": {
     "meta_title": "Category｜All the Human Benchmark Test tools",
