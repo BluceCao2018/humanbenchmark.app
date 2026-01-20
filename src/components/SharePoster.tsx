@@ -30,7 +30,7 @@ const PortraitPoster = ({ reactionTime, rank, totalUsers, testType,title, custom
             <h1 className="text-3xl font-bold mb-2">
               {title}
             </h1>
-            <p className="text-lg opacity-90">FunBenchmark.com</p>
+            <p className="text-lg opacity-90">HumanBenchmark.app</p>
           </div>
           
           <div className="space-y-8">
@@ -115,7 +115,7 @@ const LandscapePoster = ({ reactionTime, rank, totalUsers, testType, title, cust
               <h1 className="text-4xl font-bold text-white mb-2">
                 {title}
               </h1>
-              <p className="text-xl text-white/90">FunBenchmark.com</p>
+              <p className="text-xl text-white/90">HumanBenchmark.app</p>
             </div>
 
             <div className="space-y-2">
