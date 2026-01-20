@@ -39,15 +39,15 @@
       },
       "audioReaction": {
         "name": "Audio Reaction Time",
-        "description": "Measure your reaction time to sound"
+        "description": "Typical 140–160ms in healthy adults—check yours"
       },
       "colorBlindness": {
         "name": "Color Blindness Test",
-        "description": "Check your color vision ability"
+        "description": "Ishihara plates test (not a medical diagnosis)."
       },
       "reactionTime": {
         "name": "Reaction Time Test",
-        "description": "Test your visual reaction speed"
+        "description": "Measure visual reaction time in milliseconds."
       }
     }
   },
